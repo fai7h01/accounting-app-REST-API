@@ -43,8 +43,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> listProductsByCategoryAndName() {
-       // Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
-        List<Product> sortedProducts = productRepository.findByCompanyIdOrderByCategoryDescriptionAndProductNameAsc(1L);
+        Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
+        List<Product> sortedProducts = productRepository.findByCompanyIdOrderByCategoryDescriptionAndProductNameAsc(companyId);
         return sortedProducts.stream()
                 .map(product -> mapperUtil.convert(product, new ProductDto()))
                 .collect(Collectors.toList());
@@ -91,8 +91,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> findAllInStock() {
-//        Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
-        List<Product> productsInStock = productRepository.findByCategory_Company_IdAndQuantityInStockGreaterThan(1L, 0);
+        Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
+        List<Product> productsInStock = productRepository.findByCategory_Company_IdAndQuantityInStockGreaterThan(companyId, 0);
         return productsInStock.stream().map(product -> mapperUtil.convert(product, new ProductDto())).collect(Collectors.toList());
     }
     

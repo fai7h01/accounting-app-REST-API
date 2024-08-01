@@ -44,8 +44,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> listCategoryByCompany() {
-        //Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
-        return categoryRepository.findByCompanyIdOrderByDescriptionAsc(1L).stream()
+        Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
+        return categoryRepository.findByCompanyIdOrderByDescriptionAsc(companyId).stream()
                 .map(category -> {
                     CategoryDto categoryDto = mapperUtil.convert(category, new CategoryDto());
                     List<ProductDto> product = productService.findAllByCategory(category);
@@ -57,15 +57,15 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void save(CategoryDto dto) {
-        //CompanyDto currentUsersCompany = companyService.getCompanyDtoByLoggedInUser();
-        //dto.setCompany(currentUsersCompany);
+        CompanyDto currentUsersCompany = companyService.getCompanyDtoByLoggedInUser();
+        dto.setCompany(currentUsersCompany);
         categoryRepository.save(mapperUtil.convert(dto, new Category()));
     }
 
     @Override
     public void update(CategoryDto dto) {
-        //CompanyDto currentUsersCompany = companyService.getCompanyDtoByLoggedInUser();
-        //dto.setCompany(currentUsersCompany);
+        CompanyDto currentUsersCompany = companyService.getCompanyDtoByLoggedInUser();
+        dto.setCompany(currentUsersCompany);
         categoryRepository.save(mapperUtil.convert(dto, new Category()));
     }
 

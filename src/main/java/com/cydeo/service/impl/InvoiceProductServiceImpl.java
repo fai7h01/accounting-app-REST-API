@@ -88,7 +88,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
         for (Product product : products) {
             int stock = product.getQuantityInStock() - invoiceProductRepository.sumQuantityOfProducts(id, product.getId());
-            if (stock < 0){
+            if (stock < 0) {
                 throw new NoSuchElementException("Stock for " + product.getName() + " is not enough to approve invoice.");
             }
             product.setQuantityInStock(stock);
@@ -98,7 +98,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
     public void calculateProfitLoss(Long id) {
-         List<InvoiceProductDto> invoiceProducts = listAllByInvoiceId(id);
+        List<InvoiceProductDto> invoiceProducts = listAllByInvoiceId(id);
         for (InvoiceProductDto each : invoiceProducts) {
             Long productId = each.getProduct().getId();
             BigDecimal profitLoss = getInvoiceProductTotalWithTax(each)
@@ -109,13 +109,13 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     }
 
     private BigDecimal calculateCost(Long productId, Integer salesQuantity) {
-       // Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
-        List<InvoiceProduct> approvedInvoiceProducts = invoiceProductRepository.findApprovedPurchaseInvoices(productId, 1L);
+        Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
+        List<InvoiceProduct> approvedInvoiceProducts = invoiceProductRepository.findApprovedPurchaseInvoices(productId, companyId);
         BigDecimal totalCost = BigDecimal.ZERO;
 
         for (InvoiceProduct each : approvedInvoiceProducts) {
             int remainingQuantity = each.getRemainingQuantity() - salesQuantity;
-            if (remainingQuantity <= 0){
+            if (remainingQuantity <= 0) {
                 BigDecimal costWithoutTax = each.getPrice().multiply(BigDecimal.valueOf(each.getRemainingQuantity()));
                 BigDecimal tax = costWithoutTax.multiply(BigDecimal.valueOf(each.getTax())).divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP);
                 BigDecimal costWithTax = costWithoutTax.add(tax);
@@ -124,7 +124,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
                 totalCost = totalCost.add(costWithTax);
                 invoiceProductRepository.save(each);
                 if (remainingQuantity == 0) break;
-            }else{
+            } else {
                 BigDecimal costWithoutTax = each.getPrice().multiply(BigDecimal.valueOf(each.getRemainingQuantity()));
                 BigDecimal tax = costWithoutTax.multiply(BigDecimal.valueOf(each.getTax())).divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP);
                 BigDecimal costWithTax = costWithoutTax.add(tax);

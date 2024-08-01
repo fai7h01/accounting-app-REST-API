@@ -40,7 +40,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     }
     @Override
     public ClientVendorDto save(ClientVendorDto clientVendorDto) {
-        //clientVendorDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
+        clientVendorDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
         ClientVendor clientVendor = mapperUtil.convert(clientVendorDto, new ClientVendor());
         if (clientVendorDto.getAddress() != null) {
             Address address = addressService.save(clientVendorDto.getAddress());
@@ -91,11 +91,8 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     @Override
     public List<ClientVendorDto> listAllClientVendorsByCompany() {
-//        UserDto userDto = securityService.getLoggedInUser();
-//        String companyTitle = userDto.getCompany().getTitle();
-
-
-        return clientVendorRepository.findByCompany_TitleOrderByClientVendorTypeAscClientVendorNameAsc("companyTitle")
+        String companyTitle = companyService.getCompanyDtoByLoggedInUser().getTitle();
+        return clientVendorRepository.findByCompany_TitleOrderByClientVendorTypeAscClientVendorNameAsc(companyTitle)
                 .stream()
                 .map(clientVendor -> {
                     ClientVendorDto clientVendorDto = mapperUtil.convert(clientVendor, new ClientVendorDto());
@@ -107,9 +104,8 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     }
     @Override
     public List<ClientVendorDto> listAllClientVendorsByType(ClientVendorType clientVendorType) {
-//        UserDto userDto = securityService.getLoggedInUser();
-//        String companyTitle = userDto.getCompany().getTitle();
-        List<ClientVendor> clientVendorList = clientVendorRepository.findAllByClientVendorTypeAndCompany_Title(clientVendorType, "companyTitle");
+        String companyTitle = companyService.getCompanyDtoByLoggedInUser().getTitle();
+        List<ClientVendor> clientVendorList = clientVendorRepository.findAllByClientVendorTypeAndCompany_Title(clientVendorType, companyTitle);
         return clientVendorList.stream().map(clientVendor -> mapperUtil.convert(clientVendor, new ClientVendorDto())).collect(Collectors.toList());
     }
     @Override

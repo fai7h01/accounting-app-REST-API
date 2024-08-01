@@ -59,8 +59,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public List<InvoiceDto> listAllByTypeAndCompany(InvoiceType invoiceType) {
-//        String companyTitle = companyService.getCompanyDtoByLoggedInUser().getTitle();
-        return invoiceRepository.findByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(invoiceType, "companyTitle")
+        String companyTitle = companyService.getCompanyDtoByLoggedInUser().getTitle();
+        return invoiceRepository.findByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(invoiceType, companyTitle)
                 .stream()
                 .map(invoice -> {
                     InvoiceDto invoiceDto = mapperUtil.convert(invoice, new InvoiceDto());
@@ -153,8 +153,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public List<InvoiceDto> listTop3Approved(InvoiceStatus status) {
-//        String title = companyService.getCompanyDtoByLoggedInUser().getTitle();
-        List<Invoice> top3Approved = invoiceRepository.findTop3ByInvoiceStatusAndCompany_TitleOrderByDateDesc(InvoiceStatus.APPROVED, "title");
+        String title = companyService.getCompanyDtoByLoggedInUser().getTitle();
+        List<Invoice> top3Approved = invoiceRepository.findTop3ByInvoiceStatusAndCompany_TitleOrderByDateDesc(InvoiceStatus.APPROVED, title);
 
         return top3Approved.stream().map(each -> setPriceTaxAndTotal(mapperUtil.convert(each, new InvoiceDto()))).collect(Collectors.toList());
 
@@ -198,8 +198,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public List<InvoiceDto> findByInvoiceTypeAndStatus(InvoiceType type, InvoiceStatus status) {
-//        String companyTitle = companyService.getCompanyDtoByLoggedInUser().getTitle();
-        return invoiceRepository.findByInvoiceTypeAndInvoiceStatusAndCompanyTitleOrderByDateAsc(type, status, "companyTitle").stream()
+        String companyTitle = companyService.getCompanyDtoByLoggedInUser().getTitle();
+        return invoiceRepository.findByInvoiceTypeAndInvoiceStatusAndCompanyTitleOrderByDateAsc(type, status, companyTitle).stream()
                 .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
                 .toList();
     }
