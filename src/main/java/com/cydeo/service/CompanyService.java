@@ -26,4 +26,6 @@ public interface CompanyService {
 
     boolean titleIsExist(String companyTitle);
 
+    CompanyDto getCompanyDtoByLoggedInUser();
+
 }

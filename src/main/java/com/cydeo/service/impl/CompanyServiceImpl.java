@@ -1,11 +1,13 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.dto.CompanyDto;
+import com.cydeo.dto.UserDto;
 import com.cydeo.entity.Company;
 import com.cydeo.enums.CompanyStatus;
 import com.cydeo.repository.CompanyRepository;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.CompanyService;
+import com.cydeo.service.KeycloakService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,11 +22,13 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
     private final MapperUtil mapperUtil;
     private final UserRepository userRepository;
+    private final KeycloakService keycloakService;
 
-    public CompanyServiceImpl(CompanyRepository companyRepository, MapperUtil mapperUtil, UserRepository userRepository) {
+    public CompanyServiceImpl(CompanyRepository companyRepository, MapperUtil mapperUtil, UserRepository userRepository, KeycloakService keycloakService) {
         this.companyRepository = companyRepository;
         this.mapperUtil = mapperUtil;
         this.userRepository = userRepository;
+        this.keycloakService = keycloakService;
     }
 
     @Override
@@ -94,6 +98,12 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public boolean titleIsExist(String companyTitle) {
     return  companyRepository.findByTitleIs(companyTitle)!=null;
+    }
+
+    @Override
+    public CompanyDto getCompanyDtoByLoggedInUser() {
+        UserDto userDto = keycloakService.getLoggedInUser();
+        return userDto.getCompany();
     }
 
 }
