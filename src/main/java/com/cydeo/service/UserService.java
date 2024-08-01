@@ -14,7 +14,7 @@ public interface UserService {
 
     UserDto findById(Long id);
 
-    List<UserDto> findAll();
+    List<UserDto> getAllUsers();
 
     List<UserDto> findByCompanyId(Long companyId);
 

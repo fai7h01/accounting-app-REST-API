@@ -55,12 +55,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> findAll() {
-        return userRepository.findAll().stream()
-                .map(user -> mapperUtil.convert(user, new UserDto()))
-                .sorted(Comparator.comparing(UserDto::getCompanyName)
-                        .thenComparing(UserDto::getRoleDescription))
-                .collect(Collectors.toList());
+    public List<UserDto> getAllUsers() {
+        return userRepository.findAll().stream().map(user -> mapperUtil.convert(user, new UserDto()))
+                .sorted(Comparator.comparing((UserDto userDto) -> userDto.getCompany().getTitle())
+                        .thenComparing(userDto -> userDto.getRole().getDescription()))
+                .peek(userDto -> userDto.setOnlyAdmin(isOnlyAdmin(userDto)))
+                .toList();
     }
 
     @Override
