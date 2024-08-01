@@ -29,7 +29,6 @@ public class KeycloakServiceImpl implements KeycloakService {
     private final UserService userService;
 
     public KeycloakServiceImpl(KeycloakProperties keycloakProperties, UserService userService) {
-
         this.keycloakProperties = keycloakProperties;
         this.userService = userService;
     }
