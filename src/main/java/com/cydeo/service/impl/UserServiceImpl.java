@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -25,18 +26,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findByUsername(String username) {
-        User user = userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isEmpty()){
+            throw new IllegalArgumentException("User does not exists");
+        }
         return mapperUtil.convert(user, new UserDto());
     }
 
     @Override
-    public void save(UserDto userDto) {
+    public UserDto save(UserDto userDto) {
+
+        if (usernameAlreadyExists(userDto.getUsername())){
+            throw new IllegalArgumentException("Username: " + userDto.getUsername() + " already exists");
+        }
+
         if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
             throw new IllegalArgumentException("Passwords do not match");
         }
 
         User user = mapperUtil.convert(userDto, new User());
-        userRepository.save(user);
+        User entity = userRepository.save(user);
+        return mapperUtil.convert(entity, new UserDto());
+    }
+
+    private boolean usernameAlreadyExists(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.isPresent();
     }
 
     @Override

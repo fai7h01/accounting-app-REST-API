@@ -8,7 +8,7 @@ public interface UserService {
 
     UserDto findByUsername(String username);
 
-    void save(UserDto userDto);
+    UserDto save(UserDto userDto);
 
     void update(UserDto userDto);
 
