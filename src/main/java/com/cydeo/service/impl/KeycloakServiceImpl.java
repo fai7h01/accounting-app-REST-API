@@ -1,9 +1,10 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.config.KeycloakProperties;
-import com.cydeo.dto.UserDTO;
 import com.cydeo.dto.UserDto;
 import com.cydeo.service.KeycloakService;
+import com.cydeo.service.UserService;
+import org.keycloak.adapters.springsecurity.account.SimpleKeycloakAccount;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UsersResource;
@@ -11,6 +12,8 @@ import org.keycloak.representations.idm.ClientRepresentation;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
@@ -23,10 +26,12 @@ import static org.keycloak.admin.client.CreatedResponseUtil.getCreatedId;
 public class KeycloakServiceImpl implements KeycloakService {
 
     private final KeycloakProperties keycloakProperties;
+    private final UserService userService;
 
-    public KeycloakServiceImpl(KeycloakProperties keycloakProperties) {
+    public KeycloakServiceImpl(KeycloakProperties keycloakProperties, UserService userService) {
 
         this.keycloakProperties = keycloakProperties;
+        this.userService = userService;
     }
 
     @Override
@@ -35,13 +40,13 @@ public class KeycloakServiceImpl implements KeycloakService {
         CredentialRepresentation credential = new CredentialRepresentation();
         credential.setType(CredentialRepresentation.PASSWORD);
         credential.setTemporary(false);
-        credential.setValue(userDTO.getPassWord());
+        credential.setValue(userDTO.getPassword());
 
         UserRepresentation keycloakUser = new UserRepresentation();
-        keycloakUser.setUsername(userDTO.getUserName());
-        keycloakUser.setFirstName(userDTO.getFirstName());
-        keycloakUser.setLastName(userDTO.getLastName());
-        keycloakUser.setEmail(userDTO.getUserName());
+        keycloakUser.setUsername(userDTO.getUsername());
+        keycloakUser.setFirstName(userDTO.getFirstname());
+        keycloakUser.setLastName(userDTO.getLastname());
+        keycloakUser.setEmail(userDTO.getUsername());
         keycloakUser.setCredentials(asList(credential));
         keycloakUser.setEmailVerified(true);
         keycloakUser.setEnabled(true);
@@ -83,6 +88,15 @@ public class KeycloakServiceImpl implements KeycloakService {
         usersResource.delete(uid);
 
         keycloak.close();
+    }
+
+    @Override
+    public UserDto getLoggedInUser() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        SimpleKeycloakAccount details = (SimpleKeycloakAccount) authentication.getDetails();
+        String username = details.getKeycloakSecurityContext().getToken().getPreferredUsername();
+        return userService.findByUsername(username);
     }
 
     private Keycloak getKeycloakInstance(){
