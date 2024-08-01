@@ -22,15 +22,16 @@ public class UserController {
     @GetMapping("/list")
     public ResponseEntity<ResponseWrapper> listAllUser(){
         List<UserDto> users = userService.getAllUsers();
-        return ResponseEntity.ok(ResponseWrapper.builder()
-                .code(HttpStatus.OK.value())
-                .message("Users are successfully retrieved")
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
+                .message("Users are successfully retrieved.")
                 .data(users).build());
     }
 
     @PostMapping("/create")
     public ResponseEntity<ResponseWrapper> createUser(@RequestBody UserDto user){
         UserDto userDto = userService.save(user);
-        return null;
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
+                .message("User is successfully created.")
+                .data(userDto).build());
     }
 }
