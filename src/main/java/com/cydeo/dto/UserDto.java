@@ -1,5 +1,8 @@
 package com.cydeo.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.validation.constraints.*;
@@ -9,7 +12,7 @@ import javax.validation.constraints.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto {
 
     private Long id;
@@ -20,6 +23,7 @@ public class UserDto {
     private String username;
 
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank(message = "Password is required field.")
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[\\d!@#$%^&*()_+])[A-Za-z\\d!@#$%^&*()_+]{4,}$",
             message = "Password should be at least 4 characters long and needs to contain 1 capital letter, 1 small letter and 1 special character or number.")
@@ -27,6 +31,7 @@ public class UserDto {
 
 
     @NotBlank(message = "Confirm Password is required field.")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String confirmPassword;
 
 
@@ -51,6 +56,7 @@ public class UserDto {
     private CompanyDto company;
 
 
+    @JsonIgnore
     private boolean isOnlyAdmin;
 
 
