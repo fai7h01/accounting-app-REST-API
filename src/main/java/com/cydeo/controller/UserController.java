@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RestController
@@ -20,6 +21,7 @@ public class UserController {
     }
 
     @GetMapping("/list")
+    @RolesAllowed({"Root User", "Admin"})
     public ResponseEntity<ResponseWrapper> listAllUser(){
         List<UserDto> users = userService.getAllUsers();
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
@@ -27,7 +29,7 @@ public class UserController {
                 .data(users).build());
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<ResponseWrapper> createUser(@RequestBody UserDto user){
         UserDto userDto = userService.save(user);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
