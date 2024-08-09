@@ -38,6 +38,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         List<ClientVendor> clientVendorList = clientVendorRepository.findAll();
         return clientVendorList.stream().map(clientVendor -> mapperUtil.convert(clientVendor, new ClientVendorDto())).collect(Collectors.toList());
     }
+
     @Override
     public ClientVendorDto save(ClientVendorDto clientVendorDto) {
         clientVendorDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
@@ -49,6 +50,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         clientVendorRepository.save(clientVendor);
         return mapperUtil.convert(clientVendor, new ClientVendorDto());
     }
+
     @Override
     public void update(ClientVendorDto clientVendorDto) {
         ClientVendor existingClientVendor = clientVendorRepository.findById(clientVendorDto.getId())
