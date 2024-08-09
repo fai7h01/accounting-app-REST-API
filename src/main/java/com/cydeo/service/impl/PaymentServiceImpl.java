@@ -4,6 +4,7 @@ import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.PaymentDto;
 import com.cydeo.entity.Company;
 import com.cydeo.entity.Payment;
+import com.cydeo.enums.Currency;
 import com.cydeo.enums.Months;
 import com.cydeo.repository.PaymentRepository;
 import com.cydeo.service.CompanyService;
