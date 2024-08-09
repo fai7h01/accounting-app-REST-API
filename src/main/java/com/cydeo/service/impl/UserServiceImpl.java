@@ -3,8 +3,10 @@ package com.cydeo.service.impl;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.User;
 import com.cydeo.repository.UserRepository;
+import com.cydeo.service.KeycloakService;
 import com.cydeo.service.UserService;
 import com.cydeo.util.MapperUtil;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -18,10 +20,12 @@ public class UserServiceImpl implements UserService {
 
     private final MapperUtil mapperUtil;
     private final UserRepository userRepository;
+    private final KeycloakService keycloakService;
 
-    public UserServiceImpl(MapperUtil mapperUtil, UserRepository userRepository) {
+    public UserServiceImpl(MapperUtil mapperUtil, UserRepository userRepository,@Lazy KeycloakService keycloakService) {
         this.mapperUtil = mapperUtil;
         this.userRepository = userRepository;
+        this.keycloakService = keycloakService;
     }
 
     @Override
@@ -36,16 +40,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto save(UserDto userDto) {
 
-        if (usernameAlreadyExists(userDto.getUsername())){
-            throw new IllegalArgumentException("Username: " + userDto.getUsername() + " already exists");
-        }
+//        if (usernameAlreadyExists(userDto.getUsername())){
+//            throw new IllegalArgumentException("Username: " + userDto.getUsername() + " already exists");
+//        }
+//
+////        if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
+////            throw new IllegalArgumentException("Passwords do not match");
+////        }
 
-        if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
-            throw new IllegalArgumentException("Passwords do not match");
-        }
-
-        User user = mapperUtil.convert(userDto, new User());
-        User entity = userRepository.save(user);
+        User entity = userRepository.save(mapperUtil.convert(userDto, new User()));
+        //keycloakService.userCreate(userDto);
         return mapperUtil.convert(entity, new UserDto());
     }
 

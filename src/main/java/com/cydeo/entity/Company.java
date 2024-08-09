@@ -1,6 +1,5 @@
 package com.cydeo.entity;
 
-import com.cydeo.entity.common.BaseEntity;
 import com.cydeo.enums.CompanyStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

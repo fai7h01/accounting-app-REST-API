@@ -1,6 +1,5 @@
 package com.cydeo.entity;
 
-import com.cydeo.entity.common.BaseEntity;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import lombok.Getter;
