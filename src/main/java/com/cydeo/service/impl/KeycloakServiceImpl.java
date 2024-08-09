@@ -91,7 +91,6 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     @Override
     public UserDto getLoggedInUser() {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SimpleKeycloakAccount details = (SimpleKeycloakAccount) authentication.getDetails();
         String username = details.getKeycloakSecurityContext().getToken().getPreferredUsername();
