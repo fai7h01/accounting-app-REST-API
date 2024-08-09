@@ -25,6 +25,7 @@ public class UserController {
     public ResponseEntity<ResponseWrapper> listAllUser(){
         List<UserDto> users = userService.getAllUsers();
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
+                .success(true)
                 .message("Users are successfully retrieved.")
                 .data(users).build());
     }
@@ -32,16 +33,19 @@ public class UserController {
     @PostMapping
     public ResponseEntity<ResponseWrapper> createUser(@RequestBody UserDto user){
         UserDto userDto = userService.save(user);
-        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseWrapper.builder().code(HttpStatus.CREATED.value())
+                .success(true)
                 .message("User is successfully created.")
                 .data(userDto).build());
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<ResponseWrapper> updateUser(@RequestBody UserDto user, @PathVariable Long id){
-        userService.update(user);
+    @PutMapping
+    public ResponseEntity<ResponseWrapper> updateUser(@RequestBody UserDto user){
+        UserDto userDto = userService.update(user);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
-                .message("User is successfully update.")
-                .data(user).build());
+                .success(true)
+                .message("User is successfully updated.")
+                .data(userDto).build());
     }
 }

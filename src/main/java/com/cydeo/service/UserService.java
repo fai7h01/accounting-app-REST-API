@@ -10,7 +10,7 @@ public interface UserService {
 
     UserDto save(UserDto userDto);
 
-    void update(UserDto userDto);
+    UserDto update(UserDto userDto);
 
     UserDto findById(Long id);
 

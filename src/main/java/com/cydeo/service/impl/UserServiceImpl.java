@@ -40,13 +40,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto save(UserDto userDto) {
 
-//        if (usernameAlreadyExists(userDto.getUsername())){
-//            throw new IllegalArgumentException("Username: " + userDto.getUsername() + " already exists");
+        if (usernameAlreadyExists(userDto.getUsername())){
+            throw new IllegalArgumentException("Username: " + userDto.getUsername() + " already exists");
+        }
+
+        //TODO check if password match and exception handling
+//        if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
+//            throw new IllegalArgumentException("Passwords do not match");
 //        }
-//
-////        if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
-////            throw new IllegalArgumentException("Passwords do not match");
-////        }
 
         User entity = userRepository.save(mapperUtil.convert(userDto, new User()));
         //keycloakService.userCreate(userDto);
@@ -59,9 +60,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(UserDto userDto) {
-        User user = mapperUtil.convert(userDto, new User());
-        userRepository.save(user);
+    public UserDto update(UserDto userDto) {
+        Optional<User> user = userRepository.findByUsername(userDto.getUsername());
+        User converted = mapperUtil.convert(userDto, new User());
+        if (user.isPresent()){
+            converted.setId(user.get().getId());
+            userRepository.save(converted);
+        }
+        return mapperUtil.convert(converted, new UserDto());
     }
 
 
