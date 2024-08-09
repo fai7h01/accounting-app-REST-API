@@ -36,4 +36,12 @@ public class UserController {
                 .message("User is successfully created.")
                 .data(userDto).build());
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ResponseWrapper> updateUser(@RequestBody UserDto user, @PathVariable Long id){
+        userService.update(user);
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
+                .message("User is successfully update.")
+                .data(user).build());
+    }
 }
