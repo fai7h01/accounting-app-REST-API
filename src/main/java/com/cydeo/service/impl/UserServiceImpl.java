@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void delete(Long id) {
 
         User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 

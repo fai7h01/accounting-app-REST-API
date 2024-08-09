@@ -18,7 +18,7 @@ public interface UserService {
 
     List<UserDto> findByCompanyId(Long companyId);
 
-    void deleteUser(Long id);
+    void delete(Long id);
 
     boolean emailExists(String email);
 
