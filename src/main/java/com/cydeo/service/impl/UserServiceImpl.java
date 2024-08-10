@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -68,14 +69,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto update(UserDto userDto) {
-        Optional<User> user = userRepository.findByUsername(userDto.getUsername());
-        User converted = mapperUtil.convert(userDto, new User());
-        if (user.isPresent()){
-            converted.setId(user.get().getId());
-            userRepository.save(converted);
-        }
-        return mapperUtil.convert(converted, new UserDto());
+    public UserDto update(Long id, UserDto userDto) {
+        User foundUser = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User not found."));
+        userDto.setId(foundUser.getId());
+        userDto.setCompany(mapperUtil.convert(foundUser.getCompany(), new CompanyDto()));
+        User saved = userRepository.save(mapperUtil.convert(userDto, new User()));
+        return mapperUtil.convert(saved, new UserDto());
     }
 
 

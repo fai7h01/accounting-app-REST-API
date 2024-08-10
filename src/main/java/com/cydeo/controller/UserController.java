@@ -38,9 +38,9 @@ public class UserController {
                 .data(userDto).build());
     }
 
-    @PutMapping
-    public ResponseEntity<ResponseWrapper> updateUser(@RequestBody UserDto user){
-        UserDto userDto = userService.update(user);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ResponseWrapper> updateUser(@PathVariable Long id, @RequestBody UserDto user){
+        UserDto userDto = userService.update(id, user);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)
                 .message("User is successfully updated.")
