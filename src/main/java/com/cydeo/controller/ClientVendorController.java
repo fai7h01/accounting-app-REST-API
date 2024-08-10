@@ -36,4 +36,14 @@ public class ClientVendorController {
                 .data(clientVendorDto).build());
     }
 
+    @PutMapping
+    public ResponseEntity<ResponseWrapper> updateClientVendor(@RequestBody ClientVendorDto clientVendor){
+        ClientVendorDto updatedClientVendor = clientVendorService.update(clientVendor);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.builder()
+                .code(HttpStatus.CREATED.value())
+                .success(true)
+                .message(updatedClientVendor.getClientVendorType().getValue() + " is successfully updated.")
+                .data(updatedClientVendor).build());
+    }
+
 }

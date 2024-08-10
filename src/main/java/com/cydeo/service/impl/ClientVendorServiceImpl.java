@@ -1,6 +1,7 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.dto.ClientVendorDto;
+import com.cydeo.dto.CompanyDto;
 import com.cydeo.entity.Address;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.repository.ClientVendorRepository;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,40 +43,18 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         clientVendorRepository.save(clientVendor);
         return mapperUtil.convert(clientVendor, new ClientVendorDto());
     }
-//
-//    @Override
-//    public void update(ClientVendorDto clientVendorDto) {
-//        ClientVendor existingClientVendor = clientVendorRepository.findById(clientVendorDto.getId())
-//                .orElseThrow(() -> new IllegalArgumentException("Client/Vendor not found"));
-//
-//        existingClientVendor.setClientVendorName(clientVendorDto.getClientVendorName());
-//        existingClientVendor.setClientVendorType(clientVendorDto.getClientVendorType());
-//        existingClientVendor.setPhone(clientVendorDto.getPhone());
-//        existingClientVendor.setWebsite(clientVendorDto.getWebsite());
-//
-//        if (clientVendorDto.getAddress() != null) {
-//            Address existingAddress = existingClientVendor.getAddress();
-//            AddressDto addressDto = clientVendorDto.getAddress();
-//
-//            if (existingAddress != null) {
-//                existingAddress.setAddressLine1(addressDto.getAddressLine1());
-//                existingAddress.setAddressLine2(addressDto.getAddressLine2());
-//                existingAddress.setCity(addressDto.getCity());
-//                existingAddress.setState(addressDto.getState());
-//                existingAddress.setCountry(addressDto.getCountry());
-//                existingAddress.setZipCode(addressDto.getZipCode());
-//
-//                AddressDto updatedAddressDto = mapperUtil.convert(existingAddress, new AddressDto());
-//                addressService.save(updatedAddressDto);
-//            } else {
-//                Address newAddress = mapperUtil.convert(addressDto, new Address());
-//                AddressDto newAddressDto = mapperUtil.convert(newAddress, new AddressDto());
-//                Address savedNewAddress = mapperUtil.convert(addressService.save(newAddressDto), new Address());
-//                existingClientVendor.setAddress(savedNewAddress);
-//            }
-//        }
-//        clientVendorRepository.save(existingClientVendor);
-//    }
+
+    @Override
+    public ClientVendorDto update(ClientVendorDto clientVendorDto) {
+        Optional<ClientVendor> clientVendor =
+                clientVendorRepository.findByClientVendorNameAndCompanyId(clientVendorDto.getClientVendorName(), companyService.getCompanyDtoByLoggedInUser().getId());
+        ClientVendor updatedClientVendor = mapperUtil.convert(clientVendorDto, new ClientVendor());
+        if (clientVendor.isPresent()){
+            updatedClientVendor.setId(clientVendor.get().getId());
+            clientVendorRepository.save(updatedClientVendor);
+        }
+        return mapperUtil.convert(updatedClientVendor, new ClientVendorDto());
+    }
 //
 //    @Override
 //    public ClientVendorDto findById(Long id) {
