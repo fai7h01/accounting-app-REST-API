@@ -1,5 +1,6 @@
 package com.cydeo.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import javax.validation.constraints.Size;
 @Setter
 public class AddressDto {
 
+    @JsonIgnore
     private Long id;
 
     @NotBlank(message = "Address is required field.")

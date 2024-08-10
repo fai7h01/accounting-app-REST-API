@@ -24,14 +24,12 @@ public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
     private final MapperUtil mapperUtil;
-    private final UserRepository userRepository;
     private final KeycloakService keycloakService;
     private final AddressService addressService;
 
-    public CompanyServiceImpl(CompanyRepository companyRepository, MapperUtil mapperUtil, UserRepository userRepository, KeycloakService keycloakService, AddressService addressService) {
+    public CompanyServiceImpl(CompanyRepository companyRepository, MapperUtil mapperUtil, KeycloakService keycloakService, AddressService addressService) {
         this.companyRepository = companyRepository;
         this.mapperUtil = mapperUtil;
-        this.userRepository = userRepository;
         this.keycloakService = keycloakService;
         this.addressService = addressService;
     }
@@ -42,11 +40,10 @@ public class CompanyServiceImpl implements CompanyService {
         return mapperUtil.convert(company, new CompanyDto());
     }
 
-//    @Override
-//    public List<CompanyDto> listAllCompany() {
-//        List<Company> companyList = companyRepository.findAll();
-//        return companyList.stream().map(company -> mapperUtil.convert(company, new CompanyDto())).collect(Collectors.toList());
-//    }
+    @Override
+    public CompanyDto findByTitle(String title) {
+        return mapperUtil.convert(companyRepository.findByTitle(title), new CompanyDto());
+    }
 
 
     @Override
@@ -80,30 +77,6 @@ public class CompanyServiceImpl implements CompanyService {
         }
 
     }
-
-//
-//    @Transactional
-//    @Override
-//    public void activateCompany(Long id) {
-//        Company company= companyRepository.findById(id).orElseThrow(()-> new RuntimeException("Company Not found"));
-//        company.setCompanyStatus(CompanyStatus.ACTIVE);
-//        companyRepository.save(company);
-//        userRepository.updateUserStatusByCompanyId(company.getId(), true);
-//    }
-//
-//    @Transactional
-//    @Override
-//    public void deactivateCompany(Long id) {
-//        Company company = companyRepository.findById(id).orElseThrow(() -> new RuntimeException("Company Not found"));
-//        company.setCompanyStatus(CompanyStatus.PASSIVE);
-//        companyRepository.save(company);
-//        userRepository.updateUserStatusByCompanyId(company.getId(), false);
-//    }
-//
-//    @Override
-//    public boolean titleIsExist(String companyTitle) {
-//    return  companyRepository.findByTitleIs(companyTitle)!=null;
-//    }
 
     @Override
     public CompanyDto getCompanyDtoByLoggedInUser() {

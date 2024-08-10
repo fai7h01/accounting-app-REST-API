@@ -1,5 +1,6 @@
 package com.cydeo.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
 @Builder
 public class CategoryDto {
 
+    @JsonIgnore
     private Long id;
     @NotBlank(message = "Description is a required field.")
     @Size(min = 2, max = 100, message = "Description must be between 2 and 100 characters long.")

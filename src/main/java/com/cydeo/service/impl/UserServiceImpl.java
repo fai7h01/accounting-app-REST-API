@@ -1,8 +1,10 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.User;
 import com.cydeo.repository.UserRepository;
+import com.cydeo.service.CompanyService;
 import com.cydeo.service.KeycloakService;
 import com.cydeo.service.UserService;
 import com.cydeo.util.MapperUtil;
@@ -20,11 +22,13 @@ public class UserServiceImpl implements UserService {
     private final MapperUtil mapperUtil;
     private final UserRepository userRepository;
     private final KeycloakService keycloakService;
+    private final CompanyService companyService;
 
-    public UserServiceImpl(MapperUtil mapperUtil, UserRepository userRepository, @Lazy KeycloakService keycloakService) {
+    public UserServiceImpl(MapperUtil mapperUtil, UserRepository userRepository, @Lazy KeycloakService keycloakService,@Lazy CompanyService companyService) {
         this.mapperUtil = mapperUtil;
         this.userRepository = userRepository;
         this.keycloakService = keycloakService;
+        this.companyService = companyService;
     }
 
 
@@ -49,9 +53,13 @@ public class UserServiceImpl implements UserService {
 //            throw new IllegalArgumentException("Passwords do not match");
 //        }
 
-        User entity = userRepository.save(mapperUtil.convert(userDto, new User()));
+        CompanyDto companyDto = companyService.findByTitle(userDto.getCompany().getTitle());
+        userDto.getCompany().setId(companyDto.getId());
+
+        User converted = mapperUtil.convert(userDto, new User());
+        User saved = userRepository.save(converted);
         keycloakService.userCreate(userDto);
-        return mapperUtil.convert(entity, new UserDto());
+        return mapperUtil.convert(saved, new UserDto());
     }
 
     private boolean usernameAlreadyExists(String username) {
@@ -88,13 +96,6 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
-    @Override
-    public List<UserDto> findByCompanyId(Long companyId) {
-        return userRepository.findByCompany_Id(companyId).stream()
-                .map(user -> mapperUtil.convert(user, new UserDto()))
-                .sorted(Comparator.comparing(UserDto::getRoleDescription))
-                .collect(Collectors.toList());
-    }
 
     @Override
     public void delete(Long id) {
@@ -103,34 +104,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    @Override
-    public boolean emailExists(String email) {
-        return userRepository.findByUsername(email).isPresent();
-    }
-
 
     @Override
     public boolean isOnlyAdmin(UserDto userDto) {
         return userRepository.isOnlyAdminInCompany(userDto.getCompany().getId());
     }
 
-
-    @Override
-    public boolean isPasswordMatched(String password, String confirmPassword) {
-        return password != null && password.equals(confirmPassword);
-    }
-
-    @Override
-    public List<UserDto> findAllByRoleDescription(String role) {
-        return userRepository.findAllByRoleDescription(role).stream()
-                .map(user -> {
-                    UserDto userDto = mapperUtil.convert(user, new UserDto());
-                    userDto.setOnlyAdmin(isOnlyAdmin(userDto));
-                    return userDto;
-                })
-                .sorted(Comparator.comparing(UserDto::getCompanyName)
-                        .thenComparing(UserDto::getRoleDescription))
-                .collect(Collectors.toList());
-    }
 
 }

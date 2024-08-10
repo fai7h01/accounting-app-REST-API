@@ -1,5 +1,6 @@
 package com.cydeo.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class InvoiceProductDto {
 
+    @JsonIgnore
     private Long id;
     @NotNull(message = "Quantity is required field.")
     @Min(value = 1, message = "quantity should be between 1 and 100")

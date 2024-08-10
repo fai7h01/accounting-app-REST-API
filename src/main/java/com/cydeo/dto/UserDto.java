@@ -15,8 +15,8 @@ import javax.validation.constraints.*;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto {
 
+    @JsonIgnore
     private Long id;
-
 
     @NotBlank(message = "Email is required field.")
     @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9-]+(.[A-Za-z0-9-]+)@[^-][A-Za-z0-9-]+(.[A-Za-z0-9-]+)(.[A-Za-z]{2,})$", message = "Invalid email format.")

@@ -8,6 +8,8 @@ public interface CompanyService {
 
     CompanyDto findById(Long id);
 
+    CompanyDto findByTitle(String title);
+
     //List<CompanyDto> listAllCompany();
 
     List<CompanyDto> findAllAndSorted(); // root user can list all companies except itself

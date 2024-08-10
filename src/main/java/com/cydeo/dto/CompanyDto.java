@@ -1,6 +1,8 @@
 package com.cydeo.dto;
 
 import com.cydeo.enums.CompanyStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.validation.Valid;
@@ -14,6 +16,7 @@ import javax.validation.constraints.*;
 @Builder
 public class CompanyDto {
 
+    @JsonIgnore
     private Long id;
 
     @NotBlank(message = "Title is a required field")
@@ -35,5 +38,6 @@ public class CompanyDto {
     @NotNull
     private AddressDto address;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private CompanyStatus companyStatus;
 }

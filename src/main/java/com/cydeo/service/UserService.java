@@ -16,19 +16,9 @@ public interface UserService {
 
     List<UserDto> getAllUsers();
 
-    List<UserDto> findByCompanyId(Long companyId);
-
     void delete(Long id);
 
-    boolean emailExists(String email);
-
     boolean isOnlyAdmin(UserDto userDto);
-
-
-    boolean isPasswordMatched(String password, String confirmPassword);
-
-    List<UserDto> findAllByRoleDescription(String role);
-
 
 
 
