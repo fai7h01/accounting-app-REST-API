@@ -11,12 +11,8 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @NoArgsConstructor
-
 @Table(name = "addresses")
-
 public class Address extends BaseEntity {
-
-
 
     private String addressLine1;
     private String addressLine2;

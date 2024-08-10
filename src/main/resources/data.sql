@@ -78,6 +78,9 @@ values
 ('2024-04-09 00:00:00', 1, false, '2024-04-09 00:00:00', 1,
  'admin@redtech.com', '$2a$10$nAB5j9G1c3JHgg7qzhiIXO7cqqr5oJ3LXRNQJKssDUwHXzDGUztNK',
  'John', 'Doe', '+1 (659) 756-1265', 2, 4, true);
+-- ('2024-04-09 00:00:00', 1, false, '2024-04-09 00:00:00', 1,
+--  'faith', '$2a$10$nAB5j9G1c3JHgg7qzhiIXO7cqqr5oJ3LXRNQJKssDUwHXzDGUztNK',
+--  'Faith', 'faith', '+1 (659) 756-1265', 2, 1, true);
 
 insert into clients_vendors(insert_date_time, insert_user_id, is_deleted, last_update_date_time, last_update_user_id,
                             client_vendor_type, client_vendor_name, phone, website, address_id, company_id)

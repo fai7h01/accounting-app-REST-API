@@ -17,6 +17,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 public class ClientVendorDto {
+
     private Long id;
 
     @NotBlank(message = "Company Name is required field.")

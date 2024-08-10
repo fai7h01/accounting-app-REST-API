@@ -6,9 +6,7 @@ import com.cydeo.service.ClientVendorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,13 +17,23 @@ public class ClientVendorController {
 
     private final ClientVendorService clientVendorService;
 
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<ResponseWrapper> listAllClientVendors(){
         List<ClientVendorDto> clientVendorDtoList = clientVendorService.listAllClientVendorsForLoggedInCompany();
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)
                 .message("Client/Vendor list is successfully retrieved.")
                 .data(clientVendorDtoList).build());
+    }
+
+    @PostMapping
+    public ResponseEntity<ResponseWrapper> createClientVendor(@RequestBody ClientVendorDto clientVendor){
+        ClientVendorDto clientVendorDto = clientVendorService.save(clientVendor);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.builder()
+                .code(HttpStatus.CREATED.value())
+                .success(true)
+                .message(clientVendorDto.getClientVendorType().getValue() + " is successfully created.")
+                .data(clientVendorDto).build());
     }
 
 }

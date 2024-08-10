@@ -1,6 +1,7 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.dto.ClientVendorDto;
+import com.cydeo.entity.Address;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.service.*;
@@ -18,8 +19,8 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     private final KeycloakService keycloakService;
     private final MapperUtil mapperUtil;
 //    private final InvoiceService invoiceService;
-//    private final AddressService addressService;
-//    private final CompanyService companyService;
+    private final AddressService addressService;
+    private final CompanyService companyService;
 
 
     @Override
@@ -29,17 +30,17 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         return clientVendorList.stream().map(clientVendor -> mapperUtil.convert(clientVendor, new ClientVendorDto())).toList();
     }
 
-//    @Override
-//    public ClientVendorDto save(ClientVendorDto clientVendorDto) {
-//        clientVendorDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
-//        ClientVendor clientVendor = mapperUtil.convert(clientVendorDto, new ClientVendor());
-//        if (clientVendorDto.getAddress() != null) {
-//            Address address = addressService.save(clientVendorDto.getAddress());
-//            clientVendor.setAddress(address);
-//        }
-//        clientVendorRepository.save(clientVendor);
-//        return mapperUtil.convert(clientVendor, new ClientVendorDto());
-//    }
+    @Override
+    public ClientVendorDto save(ClientVendorDto clientVendorDto) {
+        clientVendorDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
+        ClientVendor clientVendor = mapperUtil.convert(clientVendorDto, new ClientVendor());
+        if (clientVendorDto.getAddress() != null) {
+            Address address = addressService.save(clientVendorDto.getAddress());
+            clientVendor.setAddress(address);
+        }
+        clientVendorRepository.save(clientVendor);
+        return mapperUtil.convert(clientVendor, new ClientVendorDto());
+    }
 //
 //    @Override
 //    public void update(ClientVendorDto clientVendorDto) {
