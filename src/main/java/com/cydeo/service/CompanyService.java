@@ -8,9 +8,9 @@ public interface CompanyService {
 
     CompanyDto findById(Long id);
 
-    List<CompanyDto> listAllCompany();
+    //List<CompanyDto> listAllCompany();
 
-    List<CompanyDto> findAllAndSorted();
+    List<CompanyDto> findAllAndSorted(); // root user can list all companies except itself
 
     void save(CompanyDto companyDto);
 

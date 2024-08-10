@@ -37,17 +37,16 @@ public class CompanyServiceImpl implements CompanyService {
         return mapperUtil.convert(company, new CompanyDto());
     }
 
-    @Override
-    public List<CompanyDto> listAllCompany() {
-        List<Company> companyList = companyRepository.findAll();
-        return companyList.stream().map(company -> mapperUtil.convert(company, new CompanyDto())).collect(Collectors.toList());
-    }
+//    @Override
+//    public List<CompanyDto> listAllCompany() {
+//        List<Company> companyList = companyRepository.findAll();
+//        return companyList.stream().map(company -> mapperUtil.convert(company, new CompanyDto())).collect(Collectors.toList());
+//    }
 
 
     @Override
     public List<CompanyDto> findAllAndSorted() {
-
-        return companyRepository.findAllExcludingCompanySortedByStatusAndTitle()
+        return companyRepository.findAllExcludingRootCompanySortedByStatusAndTitle()
                 .stream()
                 .map(company -> mapperUtil.convert(company, new CompanyDto()))
                 .collect(Collectors.toList());

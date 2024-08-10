@@ -3,7 +3,6 @@ package com.cydeo.service.impl;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.User;
 import com.cydeo.repository.UserRepository;
-import com.cydeo.service.CompanyService;
 import com.cydeo.service.KeycloakService;
 import com.cydeo.service.UserService;
 import com.cydeo.util.MapperUtil;
