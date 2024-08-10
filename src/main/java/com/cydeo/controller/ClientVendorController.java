@@ -39,11 +39,20 @@ public class ClientVendorController {
     @PutMapping
     public ResponseEntity<ResponseWrapper> updateClientVendor(@RequestBody ClientVendorDto clientVendor){
         ClientVendorDto updatedClientVendor = clientVendorService.update(clientVendor);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.builder()
-                .code(HttpStatus.CREATED.value())
+        return ResponseEntity.ok(ResponseWrapper.builder()
+                .code(HttpStatus.OK.value())
                 .success(true)
                 .message(updatedClientVendor.getClientVendorType().getValue() + " is successfully updated.")
                 .data(updatedClientVendor).build());
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ResponseWrapper> deleteClientVendor(@PathVariable Long id){
+        clientVendorService.delete(id);
+        return ResponseEntity.ok(ResponseWrapper.builder()
+                .code(HttpStatus.OK.value())
+                .success(true)
+                .message("Client/Vendor is successfully deleted.").build());
     }
 
 }

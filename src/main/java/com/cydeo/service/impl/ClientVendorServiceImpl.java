@@ -7,15 +7,11 @@ import com.cydeo.entity.ClientVendor;
 import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.service.*;
 import com.cydeo.util.MapperUtil;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class ClientVendorServiceImpl implements ClientVendorService {
 
     private final ClientVendorRepository clientVendorRepository;
@@ -23,6 +19,13 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     //    private final InvoiceService invoiceService;
     private final AddressService addressService;
     private final CompanyService companyService;
+
+    public ClientVendorServiceImpl(ClientVendorRepository clientVendorRepository, MapperUtil mapperUtil, AddressService addressService, CompanyService companyService) {
+        this.clientVendorRepository = clientVendorRepository;
+        this.mapperUtil = mapperUtil;
+        this.addressService = addressService;
+        this.companyService = companyService;
+    }
 
 
     @Override
@@ -54,6 +57,13 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         return mapperUtil.convert(updatedClientVendor, new ClientVendorDto());
     }
 
+    @Override
+    public void delete(Long id) {
+        ClientVendor clientVendor = clientVendorRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Client/Vendor with id: " + id + " not found."));
+        clientVendor.setIsDeleted(true);
+        clientVendorRepository.save(clientVendor);
+    }
+
     private CompanyDto getLoggedInCompany(){
         return companyService.getCompanyDtoByLoggedInUser();
     }
@@ -82,12 +92,6 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 //        String companyTitle = companyService.getCompanyDtoByLoggedInUser().getTitle();
 //        List<ClientVendor> clientVendorList = clientVendorRepository.findAllByClientVendorTypeAndCompany_Title(clientVendorType, companyTitle);
 //        return clientVendorList.stream().map(clientVendor -> mapperUtil.convert(clientVendor, new ClientVendorDto())).collect(Collectors.toList());
-//    }
-//    @Override
-//    public void delete(Long id) {
-//        ClientVendor clientVendor = clientVendorRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-//        clientVendor.setIsDeleted(true);
-//        clientVendorRepository.save(clientVendor);
 //    }
 //    @Override
 //    public List<ClientVendorType> findAllTypes() {
