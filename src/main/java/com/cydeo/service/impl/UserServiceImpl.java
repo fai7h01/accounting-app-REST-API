@@ -15,7 +15,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -100,6 +99,8 @@ public class UserServiceImpl implements UserService {
     public void delete(Long id) {
         User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         user.setDeleted(true);
+        keycloakService.delete(user.getUsername());
+        user.setUsername(user.getUsername() + "-" + user.getId());
         userRepository.save(user);
     }
 
