@@ -1,5 +1,6 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.AddressDto;
 import com.cydeo.dto.ClientVendorDto;
 import com.cydeo.dto.CompanyDto;
 import com.cydeo.entity.Address;
@@ -39,22 +40,19 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     public ClientVendorDto save(ClientVendorDto clientVendorDto) {
         clientVendorDto.setCompany(getLoggedInCompany());
         ClientVendor clientVendor = mapperUtil.convert(clientVendorDto, new ClientVendor());
-        if (clientVendorDto.getAddress() != null) {
-            Address address = addressService.save(clientVendorDto.getAddress());
-            clientVendor.setAddress(address);
-        }
         clientVendorRepository.save(clientVendor);
         return mapperUtil.convert(clientVendor, new ClientVendorDto());
     }
 
     @Override
-    public ClientVendorDto update(ClientVendorDto clientVendorDto) {
-        ClientVendor clientVendor = clientVendorRepository.findByClientVendorNameAndCompanyId(clientVendorDto.getClientVendorName(), getLoggedInCompany().getId())
-                .orElseThrow(() -> new NoSuchElementException("Client/Vendor not found."));
+    public ClientVendorDto update(Long id, ClientVendorDto clientVendorDto) {
+        ClientVendor clientVendor = clientVendorRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Client/Vendor not found."));
+        clientVendorDto.setId(clientVendor.getId());
+        clientVendorDto.setCompany(getLoggedInCompany());
+        clientVendorDto.getAddress().setId(clientVendor.getAddress().getId());
         ClientVendor updatedClientVendor = mapperUtil.convert(clientVendorDto, new ClientVendor());
-        updatedClientVendor.setId(clientVendor.getId());
-        clientVendorRepository.save(updatedClientVendor);
-        return mapperUtil.convert(updatedClientVendor, new ClientVendorDto());
+        ClientVendor saved = clientVendorRepository.save(updatedClientVendor);
+        return mapperUtil.convert(saved, new ClientVendorDto());
     }
 
     @Override

@@ -36,9 +36,9 @@ public class ClientVendorController {
                 .data(clientVendorDto).build());
     }
 
-    @PutMapping
-    public ResponseEntity<ResponseWrapper> updateClientVendor(@RequestBody ClientVendorDto clientVendor){
-        ClientVendorDto updatedClientVendor = clientVendorService.update(clientVendor);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ResponseWrapper> updateClientVendor(@RequestBody ClientVendorDto clientVendor, @PathVariable Long id){
+        ClientVendorDto updatedClientVendor = clientVendorService.update(id, clientVendor);
         return ResponseEntity.ok(ResponseWrapper.builder()
                 .code(HttpStatus.OK.value())
                 .success(true)

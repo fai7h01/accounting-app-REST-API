@@ -6,13 +6,14 @@ import com.cydeo.enums.ClientVendorType;
 import java.util.List;
 
 public interface ClientVendorService {
+
     List<ClientVendorDto> listAllClientVendorsForLoggedInCompany();
 //    ClientVendorDto findById(Long id);
 //    List<ClientVendorDto> listAllClientVendorsByCompany();
 //    List<ClientVendorDto> listAllClientVendorsByType(ClientVendorType clientVendorType);
     void delete(Long id);
     ClientVendorDto save(ClientVendorDto clientVendorDto);
-    ClientVendorDto update(ClientVendorDto clientVendorDto);
+    ClientVendorDto update(Long id, ClientVendorDto clientVendorDto);
 //    List<ClientVendorType> findAllTypes();
 //
 //    boolean existsByName(String clientVendorName);

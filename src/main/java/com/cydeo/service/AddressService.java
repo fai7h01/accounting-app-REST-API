@@ -4,5 +4,5 @@ import com.cydeo.dto.AddressDto;
 import com.cydeo.entity.Address;
 
 public interface AddressService {
-    Address save(AddressDto addressDto);
+    AddressDto save(AddressDto addressDto);
 }

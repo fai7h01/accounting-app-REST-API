@@ -31,7 +31,7 @@ public class ClientVendor extends BaseEntity {
     @Column(nullable = false)
     private ClientVendorType clientVendorType;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "address_id")
     private Address address;
 

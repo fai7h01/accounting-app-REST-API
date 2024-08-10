@@ -4,10 +4,7 @@ import com.cydeo.enums.CompanyStatus;
 import lombok.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Getter
 @Setter
@@ -16,6 +13,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Builder
 public class CompanyDto {
+
     private Long id;
 
     @NotBlank(message = "Title is a required field")
@@ -28,6 +26,10 @@ public class CompanyDto {
 
     @Pattern(regexp = "^((https?|ftp|smtp):\\/\\/)?(www.)?[a-z0-9]+\\.[a-z]+(\\/[a-zA-Z0-9#]+\\/?)*$", message = "Website should have a valid format")
     private String website;
+
+    @NotBlank
+    @Email
+    private String email;
 
     @Valid
     @NotNull

@@ -1,11 +1,14 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.AddressDto;
 import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.UserDto;
+import com.cydeo.entity.Address;
 import com.cydeo.entity.Company;
 import com.cydeo.enums.CompanyStatus;
 import com.cydeo.repository.CompanyRepository;
 import com.cydeo.repository.UserRepository;
+import com.cydeo.service.AddressService;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.KeycloakService;
 import com.cydeo.util.MapperUtil;
@@ -23,12 +26,14 @@ public class CompanyServiceImpl implements CompanyService {
     private final MapperUtil mapperUtil;
     private final UserRepository userRepository;
     private final KeycloakService keycloakService;
+    private final AddressService addressService;
 
-    public CompanyServiceImpl(CompanyRepository companyRepository, MapperUtil mapperUtil, UserRepository userRepository, KeycloakService keycloakService) {
+    public CompanyServiceImpl(CompanyRepository companyRepository, MapperUtil mapperUtil, UserRepository userRepository, KeycloakService keycloakService, AddressService addressService) {
         this.companyRepository = companyRepository;
         this.mapperUtil = mapperUtil;
         this.userRepository = userRepository;
         this.keycloakService = keycloakService;
+        this.addressService = addressService;
     }
 
     @Override
@@ -53,10 +58,15 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void save(CompanyDto companyDto) {
+    public CompanyDto save(CompanyDto companyDto) {
         companyDto.setCompanyStatus(CompanyStatus.PASSIVE);
+//        if (companyDto.getAddress() != null){
+//            AddressDto address = addressService.save(companyDto.getAddress());
+//            companyDto.setAddress(address);
+//        }
         Company company = mapperUtil.convert(companyDto, new Company());
-        companyRepository.save(company);
+        Company saved = companyRepository.save(company);
+        return mapperUtil.convert(saved, new CompanyDto());
     }
 
     @Override
@@ -71,33 +81,29 @@ public class CompanyServiceImpl implements CompanyService {
 
     }
 
-    @Override
-    public CompanyDto getUserCompany() {
-        return null;
-    }
-
-    @Transactional
-    @Override
-    public void activateCompany(Long id) {
-        Company company= companyRepository.findById(id).orElseThrow(()-> new RuntimeException("Company Not found"));
-        company.setCompanyStatus(CompanyStatus.ACTIVE);
-        companyRepository.save(company);
-        userRepository.updateUserStatusByCompanyId(company.getId(), true);
-    }
-
-    @Transactional
-    @Override
-    public void deactivateCompany(Long id) {
-        Company company = companyRepository.findById(id).orElseThrow(() -> new RuntimeException("Company Not found"));
-        company.setCompanyStatus(CompanyStatus.PASSIVE);
-        companyRepository.save(company);
-        userRepository.updateUserStatusByCompanyId(company.getId(), false);
-    }
-
-    @Override
-    public boolean titleIsExist(String companyTitle) {
-    return  companyRepository.findByTitleIs(companyTitle)!=null;
-    }
+//
+//    @Transactional
+//    @Override
+//    public void activateCompany(Long id) {
+//        Company company= companyRepository.findById(id).orElseThrow(()-> new RuntimeException("Company Not found"));
+//        company.setCompanyStatus(CompanyStatus.ACTIVE);
+//        companyRepository.save(company);
+//        userRepository.updateUserStatusByCompanyId(company.getId(), true);
+//    }
+//
+//    @Transactional
+//    @Override
+//    public void deactivateCompany(Long id) {
+//        Company company = companyRepository.findById(id).orElseThrow(() -> new RuntimeException("Company Not found"));
+//        company.setCompanyStatus(CompanyStatus.PASSIVE);
+//        companyRepository.save(company);
+//        userRepository.updateUserStatusByCompanyId(company.getId(), false);
+//    }
+//
+//    @Override
+//    public boolean titleIsExist(String companyTitle) {
+//    return  companyRepository.findByTitleIs(companyTitle)!=null;
+//    }
 
     @Override
     public CompanyDto getCompanyDtoByLoggedInUser() {

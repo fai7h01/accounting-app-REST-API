@@ -23,11 +23,11 @@ public class Company extends BaseEntity {
 
     private String website;
 
-    @Enumerated(EnumType.STRING)// with this annotation it is persisted as a string in the database
+    @Enumerated(EnumType.STRING)
     private CompanyStatus companyStatus;
 
-    @OneToOne (fetch = FetchType.LAZY, cascade = CascadeType.ALL) //Lazy: it will be fetched only when accessed, avoid unnecessary data loading; cascade.all: if company's persisted, address's persisted automatically
-    @JoinColumn (name = "address_id") // Specifies the foreign key column (address_id) in the companies table that references the primary key of the Address entity
+    @OneToOne (cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn (name = "address_id")
     private Address address;
 
 }

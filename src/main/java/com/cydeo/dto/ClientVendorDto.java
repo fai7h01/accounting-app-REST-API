@@ -1,6 +1,8 @@
 package com.cydeo.dto;
 
 import com.cydeo.enums.ClientVendorType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,6 +45,9 @@ public class ClientVendorDto {
     @Valid
     @NotNull
     private AddressDto address;
+
+    //JsonBackReference
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private CompanyDto company;
     private boolean hasInvoice;
 

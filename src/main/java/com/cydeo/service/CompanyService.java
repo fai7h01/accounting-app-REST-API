@@ -12,20 +12,19 @@ public interface CompanyService {
 
     List<CompanyDto> findAllAndSorted(); // root user can list all companies except itself
 
-    void save(CompanyDto companyDto);
+    CompanyDto save(CompanyDto companyDto);
 
     void update(CompanyDto companyDto);
 
-    CompanyDto getUserCompany();
-
-    void activateCompany(Long id);
-
-    void deactivateCompany(Long id);
-
- //   void activateOrDeactivateUsers(Company company, boolean status);
-
-    boolean titleIsExist(String companyTitle);
-
+//
+//    void activateCompany(Long id);
+//
+//    void deactivateCompany(Long id);
+//
+// //   void activateOrDeactivateUsers(Company company, boolean status);
+//
+//    boolean titleIsExist(String companyTitle);
+//
     CompanyDto getCompanyDtoByLoggedInUser();
 
 }

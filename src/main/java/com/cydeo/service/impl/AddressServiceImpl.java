@@ -16,9 +16,11 @@ public class AddressServiceImpl implements AddressService {
         this.addressRepository = addressRepository;
         this.mapperUtil = mapperUtil;
     }
+
     @Override
-    public Address save(AddressDto addressDto) {
+    public AddressDto save(AddressDto addressDto) {
         Address address = mapperUtil.convert(addressDto, new Address());
-        return addressRepository.save(address);
+        Address saved = addressRepository.save(address);
+        return mapperUtil.convert(saved, new AddressDto());
     }
 }

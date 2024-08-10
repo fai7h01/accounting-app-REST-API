@@ -6,9 +6,7 @@ import com.cydeo.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,6 +24,16 @@ public class CompanyController {
                 .success(true)
                 .message("Company list is successfully retrieved.")
                 .data(companyDtoList).build());
+    }
+
+    @PostMapping
+    public ResponseEntity<ResponseWrapper> createCompany(@RequestBody CompanyDto company){
+        CompanyDto companyDto = companyService.save(company);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.builder()
+                .code(HttpStatus.CREATED.value())
+                .success(true)
+                .message("Company is successfully created")
+                .data(companyDto).build());
     }
 
 }
