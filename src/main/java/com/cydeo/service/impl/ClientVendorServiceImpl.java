@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -18,23 +19,22 @@ import java.util.Optional;
 public class ClientVendorServiceImpl implements ClientVendorService {
 
     private final ClientVendorRepository clientVendorRepository;
-    private final KeycloakService keycloakService;
     private final MapperUtil mapperUtil;
-//    private final InvoiceService invoiceService;
+    //    private final InvoiceService invoiceService;
     private final AddressService addressService;
     private final CompanyService companyService;
 
 
     @Override
     public List<ClientVendorDto> listAllClientVendorsForLoggedInCompany() {
-        Long companyId = keycloakService.getLoggedInUser().getCompany().getId();
+        Long companyId = getLoggedInCompany().getId();
         List<ClientVendor> clientVendorList = clientVendorRepository.findAllByCompany_Id(companyId);
         return clientVendorList.stream().map(clientVendor -> mapperUtil.convert(clientVendor, new ClientVendorDto())).toList();
     }
 
     @Override
     public ClientVendorDto save(ClientVendorDto clientVendorDto) {
-        clientVendorDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
+        clientVendorDto.setCompany(getLoggedInCompany());
         ClientVendor clientVendor = mapperUtil.convert(clientVendorDto, new ClientVendor());
         if (clientVendorDto.getAddress() != null) {
             Address address = addressService.save(clientVendorDto.getAddress());
@@ -46,14 +46,16 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     @Override
     public ClientVendorDto update(ClientVendorDto clientVendorDto) {
-        Optional<ClientVendor> clientVendor =
-                clientVendorRepository.findByClientVendorNameAndCompanyId(clientVendorDto.getClientVendorName(), companyService.getCompanyDtoByLoggedInUser().getId());
+        ClientVendor clientVendor = clientVendorRepository.findByClientVendorNameAndCompanyId(clientVendorDto.getClientVendorName(), getLoggedInCompany().getId())
+                .orElseThrow(() -> new NoSuchElementException("Client/Vendor not found."));
         ClientVendor updatedClientVendor = mapperUtil.convert(clientVendorDto, new ClientVendor());
-        if (clientVendor.isPresent()){
-            updatedClientVendor.setId(clientVendor.get().getId());
-            clientVendorRepository.save(updatedClientVendor);
-        }
+        updatedClientVendor.setId(clientVendor.getId());
+        clientVendorRepository.save(updatedClientVendor);
         return mapperUtil.convert(updatedClientVendor, new ClientVendorDto());
+    }
+
+    private CompanyDto getLoggedInCompany(){
+        return companyService.getCompanyDtoByLoggedInUser();
     }
 //
 //    @Override

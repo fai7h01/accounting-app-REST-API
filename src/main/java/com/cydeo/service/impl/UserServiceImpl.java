@@ -3,9 +3,11 @@ package com.cydeo.service.impl;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.User;
 import com.cydeo.repository.UserRepository;
+import com.cydeo.service.CompanyService;
 import com.cydeo.service.KeycloakService;
 import com.cydeo.service.UserService;
 import com.cydeo.util.MapperUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -16,17 +18,14 @@ import java.util.stream.Collectors;
 
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final MapperUtil mapperUtil;
     private final UserRepository userRepository;
+    private final CompanyService companyService;
     private final KeycloakService keycloakService;
 
-    public UserServiceImpl(MapperUtil mapperUtil, UserRepository userRepository,@Lazy KeycloakService keycloakService) {
-        this.mapperUtil = mapperUtil;
-        this.userRepository = userRepository;
-        this.keycloakService = keycloakService;
-    }
 
     @Override
     public UserDto findByUsername(String username) {
@@ -98,16 +97,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Long id) {
-
         User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-
         user.setDeleted(true);
         userRepository.save(user);
     }
 
     @Override
     public boolean emailExists(String email) {
-        return userRepository.findByUsername(email) != null;
+        return userRepository.findByUsername(email).isPresent();
     }
 
 
@@ -121,7 +118,6 @@ public class UserServiceImpl implements UserService {
     public boolean isPasswordMatched(String password, String confirmPassword) {
         return password != null && password.equals(confirmPassword);
     }
-
 
     @Override
     public List<UserDto> findAllByRoleDescription(String role) {
