@@ -1,23 +1,17 @@
 package com.cydeo.service.impl;
 
-import com.cydeo.dto.AddressDto;
 import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.UserDto;
-import com.cydeo.entity.Address;
 import com.cydeo.entity.Company;
 import com.cydeo.enums.CompanyStatus;
 import com.cydeo.repository.CompanyRepository;
-import com.cydeo.repository.UserRepository;
-import com.cydeo.service.AddressService;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.KeycloakService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

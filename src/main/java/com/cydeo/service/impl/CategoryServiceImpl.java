@@ -28,11 +28,6 @@ public class CategoryServiceImpl implements CategoryService {
         this.productService = productService;
     }
 
-    @Override
-    public List<CategoryDto> listAllCategories() {
-        return categoryRepository.findAll().stream()
-                .map(category -> mapperUtil.convert(category, new CategoryDto())).toList();
-    }
 
     @Override
     public CategoryDto findById(Long id) {
@@ -48,11 +43,11 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findByCompanyIdOrderByDescriptionAsc(companyId).stream()
                 .map(category -> {
                     CategoryDto categoryDto = mapperUtil.convert(category, new CategoryDto());
-                    List<ProductDto> product = productService.findAllByCategory(category);
-                    categoryDto.setHasProduct(!product.isEmpty());
+                    List<ProductDto> products = productService.findAllByCategoryAndCompany(category);
+                    categoryDto.setHasProduct(!products.isEmpty());
                     return categoryDto;
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

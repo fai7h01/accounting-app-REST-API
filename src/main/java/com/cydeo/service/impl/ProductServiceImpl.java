@@ -1,6 +1,5 @@
 package com.cydeo.service.impl;
 
-
 import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.Category;
 import com.cydeo.entity.Product;
@@ -30,15 +29,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto findById(Long id) {
-
         Product product = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        return mapperUtil.convert(product,new ProductDto());
-        }
-
-    @Override
-    public List<ProductDto> listAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products.stream().map(product -> mapperUtil.convert(product,new ProductDto())).collect(Collectors.toList());
+        return mapperUtil.convert(product, new ProductDto());
     }
 
     @Override
@@ -52,27 +44,18 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void save(ProductDto productDto) {
-
-        Product product = mapperUtil.convert(productDto,new Product());
+        Product product = mapperUtil.convert(productDto, new Product());
         product.setCategory(mapperUtil.convert(productDto.getCategory(), new Category()));
         productRepository.save(product);
     }
 
     @Override
     public void update(ProductDto productDto) {
-        Product product = mapperUtil.convert(productDto,new Product());
+        Product product = mapperUtil.convert(productDto, new Product());
         product.setCategory(mapperUtil.convert(productDto.getCategory(), new Category()));
         productRepository.save(product);
     }
 
-    @Override
-    public boolean isNameUnique(Long categoryId, String name, Long excludeProductId) {
-        String normalizedName = name.trim().toLowerCase();
-        List<Product> products = productRepository.findByCategory_Id(categoryId);
-        return products.stream()
-                .filter(product -> !product.getId().equals(excludeProductId))
-                .noneMatch(product -> product.getName().trim().equalsIgnoreCase(normalizedName.trim()));
-    }
 
     @Override
     public void delete(Long id) {
@@ -82,25 +65,36 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> listAllProductsByCompanyId(Long id) {
-        //todo Danilo there were no implementation
-        return List.of();
-
-    }
-
-
-    @Override
-    public List<ProductDto> findAllInStock() {
+    public List<ProductDto> findAllByCategoryAndCompany(Category category) {
         Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
-        List<Product> productsInStock = productRepository.findByCategory_Company_IdAndQuantityInStockGreaterThan(companyId, 0);
-        return productsInStock.stream().map(product -> mapperUtil.convert(product, new ProductDto())).collect(Collectors.toList());
-    }
-    
-    @Override
-    public List<ProductDto> findAllByCategory(Category category) {
-        List<Product> productList = productRepository.findByCategory(category);
+        List<Product> productList = productRepository.retrieveAllByCategoryIdAndCompanyId(category.getId(), companyId);
         return productList.stream().map(product -> mapperUtil.convert(product, new ProductDto())).collect(Collectors.toList());
     }
+
+//    @Override
+//    public boolean isNameUnique(Long categoryId, String name, Long excludeProductId) {
+//        String normalizedName = name.trim().toLowerCase();
+//        List<Product> products = productRepository.findByCategory_Id(categoryId);
+//        return products.stream()
+//                .filter(product -> !product.getId().equals(excludeProductId))
+//                .noneMatch(product -> product.getName().trim().equalsIgnoreCase(normalizedName.trim()));
+//    }
+
+//    @Override
+//    public List<ProductDto> listAllProductsByCompanyId(Long id) {
+//        //todo Danilo there were no implementation
+//        return List.of();
+//
+//    }
+//
+//
+//    @Override
+//    public List<ProductDto> findAllInStock() {
+//        Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
+//        List<Product> productsInStock = productRepository.findByCategory_Company_IdAndQuantityInStockGreaterThan(companyId, 0);
+//        return productsInStock.stream().map(product -> mapperUtil.convert(product, new ProductDto())).collect(Collectors.toList());
+//    }
+//
 
 }
 

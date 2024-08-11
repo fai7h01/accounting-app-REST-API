@@ -17,14 +17,11 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     private final ClientVendorRepository clientVendorRepository;
     private final MapperUtil mapperUtil;
-    //    private final InvoiceService invoiceService;
-    private final AddressService addressService;
     private final CompanyService companyService;
 
-    public ClientVendorServiceImpl(ClientVendorRepository clientVendorRepository, MapperUtil mapperUtil, AddressService addressService, CompanyService companyService) {
+    public ClientVendorServiceImpl(ClientVendorRepository clientVendorRepository, MapperUtil mapperUtil, CompanyService companyService) {
         this.clientVendorRepository = clientVendorRepository;
         this.mapperUtil = mapperUtil;
-        this.addressService = addressService;
         this.companyService = companyService;
     }
 
@@ -65,40 +62,4 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     private CompanyDto getLoggedInCompany(){
         return companyService.getCompanyDtoByLoggedInUser();
     }
-//
-//    @Override
-//    public ClientVendorDto findById(Long id) {
-//        ClientVendor clientVendor = clientVendorRepository.findById(id).orElseThrow();
-//        return mapperUtil.convert(clientVendor, new ClientVendorDto());
-//    }
-//
-//    @Override
-//    public List<ClientVendorDto> listAllClientVendorsByCompany() {
-//        String companyTitle = companyService.getCompanyDtoByLoggedInUser().getTitle();
-//        return clientVendorRepository.findByCompany_TitleOrderByClientVendorTypeAscClientVendorNameAsc(companyTitle)
-//                .stream()
-//                .map(clientVendor -> {
-//                    ClientVendorDto clientVendorDto = mapperUtil.convert(clientVendor, new ClientVendorDto());
-//                    List<InvoiceDto> invoices = invoiceService.listAllByClientVendor(clientVendor);
-//                    clientVendorDto.setHasInvoice(!invoices.isEmpty());
-//                    return clientVendorDto;
-//                })
-//                .collect(Collectors.toList());
-//    }
-//    @Override
-//    public List<ClientVendorDto> listAllClientVendorsByType(ClientVendorType clientVendorType) {
-//        String companyTitle = companyService.getCompanyDtoByLoggedInUser().getTitle();
-//        List<ClientVendor> clientVendorList = clientVendorRepository.findAllByClientVendorTypeAndCompany_Title(clientVendorType, companyTitle);
-//        return clientVendorList.stream().map(clientVendor -> mapperUtil.convert(clientVendor, new ClientVendorDto())).collect(Collectors.toList());
-//    }
-//    @Override
-//    public List<ClientVendorType> findAllTypes() {
-//        return List.of(ClientVendorType.CLIENT, ClientVendorType.VENDOR);
-//
-//    }
-//
-//    @Override
-//    public boolean existsByName(String clientVendorName) {
-//        return clientVendorRepository.existsByClientVendorName(clientVendorName);
-//    }
 }
