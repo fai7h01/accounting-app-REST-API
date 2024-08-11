@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -57,25 +58,19 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyDto save(CompanyDto companyDto) {
         companyDto.setCompanyStatus(CompanyStatus.PASSIVE);
-//        if (companyDto.getAddress() != null){
-//            AddressDto address = addressService.save(companyDto.getAddress());
-//            companyDto.setAddress(address);
-//        }
         Company company = mapperUtil.convert(companyDto, new Company());
         Company saved = companyRepository.save(company);
         return mapperUtil.convert(saved, new CompanyDto());
     }
 
     @Override
-    public void update(CompanyDto companyDto) {
-        Optional<Company> foundCompany = companyRepository.findById(companyDto.getId());
+    public CompanyDto update(Long id, CompanyDto companyDto) {
+        Company foundCompany = companyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Company not found."));
+        companyDto.setId(foundCompany.getId());
+        companyDto.getAddress().setId(foundCompany.getAddress().getId());
         Company convertedCompany = mapperUtil.convert(companyDto, new Company());
-        if (foundCompany.isPresent()) {
-            convertedCompany.setId(foundCompany.get().getId());
-            convertedCompany.setCompanyStatus(CompanyStatus.ACTIVE);
-            companyRepository.save(convertedCompany);
-        }
-
+        Company saved = companyRepository.save(convertedCompany);
+        return mapperUtil.convert(saved, new CompanyDto());
     }
 
     @Override
