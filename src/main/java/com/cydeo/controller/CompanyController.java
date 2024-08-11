@@ -46,4 +46,22 @@ public class CompanyController {
                 .data(updatedCompany).build());
     }
 
+    @GetMapping("/activate/{id}")
+    public ResponseEntity<ResponseWrapper> activateCompany(@PathVariable Long id){
+        companyService.activate(id);
+        return ResponseEntity.ok(ResponseWrapper.builder()
+                .code(HttpStatus.OK.value())
+                .success(true)
+                .message("Company is successfully activated.").build());
+    }
+
+    @GetMapping("/deactivate/{id}")
+    public ResponseEntity<ResponseWrapper> deactivateCompany(@PathVariable Long id){
+        companyService.deactivate(id);
+        return ResponseEntity.ok(ResponseWrapper.builder()
+                .code(HttpStatus.OK.value())
+                .success(true)
+                .message("Company is successfully deactivated.").build());
+    }
+
 }

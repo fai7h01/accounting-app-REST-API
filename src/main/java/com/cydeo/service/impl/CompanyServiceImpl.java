@@ -26,13 +26,11 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
     private final MapperUtil mapperUtil;
     private final KeycloakService keycloakService;
-    private final AddressService addressService;
 
-    public CompanyServiceImpl(CompanyRepository companyRepository, MapperUtil mapperUtil, KeycloakService keycloakService, AddressService addressService) {
+    public CompanyServiceImpl(CompanyRepository companyRepository, MapperUtil mapperUtil, KeycloakService keycloakService) {
         this.companyRepository = companyRepository;
         this.mapperUtil = mapperUtil;
         this.keycloakService = keycloakService;
-        this.addressService = addressService;
     }
 
     @Override
@@ -71,6 +69,20 @@ public class CompanyServiceImpl implements CompanyService {
         Company convertedCompany = mapperUtil.convert(companyDto, new Company());
         Company saved = companyRepository.save(convertedCompany);
         return mapperUtil.convert(saved, new CompanyDto());
+    }
+
+    @Override
+    public void activate(Long id) {
+        Company company = companyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Company not found."));
+        company.setCompanyStatus(CompanyStatus.ACTIVE);
+        companyRepository.save(company);
+    }
+
+    @Override
+    public void deactivate(Long id) {
+        Company company = companyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Company not found."));
+        company.setCompanyStatus(CompanyStatus.PASSIVE);
+        companyRepository.save(company);
     }
 
     @Override
