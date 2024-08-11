@@ -48,11 +48,6 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Username: " + userDto.getUsername() + " already exists");
         }
 
-        //TODO check if password match and exception handling
-//        if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
-//            throw new IllegalArgumentException("Passwords do not match");
-//        }
-
         CompanyDto companyDto = companyService.findByTitle(userDto.getCompany().getTitle());
         userDto.getCompany().setId(companyDto.getId());
 
@@ -105,9 +100,11 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    @Override
-    public boolean isOnlyAdmin(UserDto userDto) {
-        return userRepository.isOnlyAdminInCompany(userDto.getCompany().getId());
+
+    private boolean isOnlyAdmin(UserDto userDto) {
+        if (!userDto.getRole().getDescription().equalsIgnoreCase("admin")) return false;
+        int countAdmins = userRepository.countAllByCompanyTitleAndRoleDescription(userDto.getCompany().getTitle(), "Admin");
+        return countAdmins == 1;
     }
 
 

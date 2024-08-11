@@ -18,8 +18,6 @@ public interface UserService {
 
     void delete(Long id);
 
-    boolean isOnlyAdmin(UserDto userDto);
-
 
 
 

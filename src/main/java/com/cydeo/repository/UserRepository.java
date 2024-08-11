@@ -10,16 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+
     Optional<User> findByUsername(String username);
 
-    @Query("SELECT CASE WHEN COUNT(u) = 1 THEN TRUE ELSE FALSE END FROM User u WHERE u.role.description = 'Admin' AND u.company.id = :companyId")
-    boolean isOnlyAdminInCompany(@Param("companyId") Long companyId);
-
-    List<User> findByCompany_Id(Long companyId);
-    List<User> findAllByRoleDescription(String roleDescription);
-
-    @Modifying
-    @Query("UPDATE User u SET u.accountNonLocked = :status WHERE u.company.id = :companyId")
-    void updateUserStatusByCompanyId(Long companyId, boolean status);
+    Integer countAllByCompanyTitleAndRoleDescription(String companyTitle, String role);
 
 }
