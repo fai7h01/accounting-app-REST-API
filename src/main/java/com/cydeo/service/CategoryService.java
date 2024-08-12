@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 public interface CategoryService {
+
     CategoryDto findById(Long id);
     List<CategoryDto> listCategoryByCompany();
     CategoryDto save(CategoryDto dto);
