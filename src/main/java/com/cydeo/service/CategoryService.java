@@ -10,7 +10,6 @@ public interface CategoryService {
     List<CategoryDto> listCategoryByCompany();
     CategoryDto save(CategoryDto dto);
     CategoryDto update(Long id, CategoryDto dto);
-    boolean isDescriptionUnique(Long id, String description, Long excludeCategoryId);
     @Transactional
     void delete(Long id);
 }

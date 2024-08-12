@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,12 +57,20 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto save(CategoryDto dto) {
+        if (categoryAlreadyExists(dto)){
+            throw new RuntimeException("Category already exists.");
+        }
         CompanyDto logged = companyService.getCompanyDtoByLoggedInUser();
         dto.setCompany(logged);
         Category saved = categoryRepository.save(mapperUtil.convert(dto, new Category()));
         return mapperUtil.convert(saved, new CategoryDto());
     }
 
+    private boolean categoryAlreadyExists(CategoryDto dto){
+        CompanyDto loggedCompany = companyService.getCompanyDtoByLoggedInUser();
+        Optional<Category> category = categoryRepository.findByDescriptionAndCompanyId(dto.getDescription(), loggedCompany.getId());
+        return category.isPresent();
+    }
 
     @Override
     public CategoryDto update(Long id, CategoryDto dto) {
@@ -71,14 +80,6 @@ public class CategoryServiceImpl implements CategoryService {
         converted.setCompany(foundCategory.getCompany());
         Category saved = categoryRepository.save(converted);
         return mapperUtil.convert(saved, new CategoryDto());
-    }
-
-    @Override
-    public boolean isDescriptionUnique(Long id, String description, Long excludeCategoryId) {
-        List<Category> categories = categoryRepository.findByCompanyIdOrderByDescriptionAsc(id);
-        return categories.stream()
-                .filter(category -> !category.getId().equals(excludeCategoryId))
-                .noneMatch(category -> category.getDescription().trim().equalsIgnoreCase(description.trim()));
     }
 
     public void delete(Long id) {
