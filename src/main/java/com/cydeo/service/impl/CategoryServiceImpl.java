@@ -4,11 +4,13 @@ import com.cydeo.dto.CategoryDto;
 import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.Category;
+import com.cydeo.entity.Company;
 import com.cydeo.repository.CategoryRepository;
 import com.cydeo.service.CategoryService;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.ProductService;
 import com.cydeo.util.MapperUtil;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
+
     private final CategoryRepository categoryRepository;
     private final MapperUtil mapperUtil;
     private final CompanyService companyService;
@@ -51,11 +54,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void save(CategoryDto dto) {
-        CompanyDto currentUsersCompany = companyService.getCompanyDtoByLoggedInUser();
-        dto.setCompany(currentUsersCompany);
-        categoryRepository.save(mapperUtil.convert(dto, new Category()));
+    public CategoryDto save(CategoryDto dto) {
+        CompanyDto logged = companyService.getCompanyDtoByLoggedInUser();
+        dto.setCompany(logged);
+        Category saved = categoryRepository.save(mapperUtil.convert(dto, new Category()));
+        return mapperUtil.convert(saved, new CategoryDto());
     }
+
 
     @Override
     public void update(CategoryDto dto) {
