@@ -14,6 +14,7 @@ import org.checkerframework.checker.units.qual.C;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,10 +64,13 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Override
-    public void update(CategoryDto dto) {
-        CompanyDto currentUsersCompany = companyService.getCompanyDtoByLoggedInUser();
-        dto.setCompany(currentUsersCompany);
-        categoryRepository.save(mapperUtil.convert(dto, new Category()));
+    public CategoryDto update(Long id, CategoryDto dto) {
+        Category foundCategory = categoryRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Category not found."));
+        Category converted = mapperUtil.convert(dto, new Category());
+        converted.setId(foundCategory.getId());
+        converted.setCompany(foundCategory.getCompany());
+        Category saved = categoryRepository.save(converted);
+        return mapperUtil.convert(saved, new CategoryDto());
     }
 
     @Override

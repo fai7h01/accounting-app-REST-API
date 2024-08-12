@@ -22,7 +22,7 @@ public class CategoryController {
         List<CategoryDto> categoryDtoList = categoryService.listCategoryByCompany();
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)
-                .message("Category list is successfully retrieved")
+                .message("Category list is successfully retrieved.")
                 .data(categoryDtoList).build());
     }
 
@@ -34,6 +34,15 @@ public class CategoryController {
                 .success(true)
                 .message("Category is successfully created.")
                 .data(categoryDto).build());
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ResponseWrapper> updateCategory(@PathVariable Long id, @RequestBody CategoryDto category){
+        CategoryDto updated = categoryService.update(id, category);
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
+                .success(true)
+                .message("Category is successfully updated.")
+                .data(updated).build());
     }
 
 }
