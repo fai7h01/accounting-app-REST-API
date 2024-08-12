@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "categories")
-@Where(clause = "is_deleted=false")
+//@Where(clause = "is_deleted=false")
 public class Category extends BaseEntity {
 
     private String description;

@@ -2,6 +2,7 @@ package com.cydeo.service;
 
 import com.cydeo.dto.CategoryDto;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface CategoryService {
@@ -10,5 +11,6 @@ public interface CategoryService {
     CategoryDto save(CategoryDto dto);
     CategoryDto update(Long id, CategoryDto dto);
     boolean isDescriptionUnique(Long id, String description, Long excludeCategoryId);
+    @Transactional
     void delete(Long id);
 }

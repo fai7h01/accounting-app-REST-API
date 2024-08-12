@@ -45,4 +45,12 @@ public class CategoryController {
                 .data(updated).build());
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ResponseWrapper> deleteCategory(@PathVariable Long id){
+        categoryService.delete(id);
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
+                .success(true)
+                .message("Category is successfully deleted.").build());
+    }
+
 }

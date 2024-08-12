@@ -82,9 +82,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     public void delete(Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        category.setIsDeleted(true);
-        categoryRepository.save(category);
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Category not found."));
+        if (!category.getProducts().isEmpty()) throw new RuntimeException("Category has products, it can not be deleted.");
+        categoryRepository.delete(category);
     }
 
 }
