@@ -200,11 +200,11 @@ public class InvoiceServiceImpl implements InvoiceService {
 //                .toList();
 //    }
 //
-//    @Override
-//    public InvoiceDto printInvoice(Long id) {
-//        InvoiceDto dto = findById(id);
-//        setPriceTaxAndTotal(dto);
-//        return dto;
-//    }
+    @Override
+    public InvoiceDto printInvoice(Long id) {
+        InvoiceDto dto = findById(id);
+        setPriceTaxAndTotal(dto);
+        return dto;
+    }
 
 }

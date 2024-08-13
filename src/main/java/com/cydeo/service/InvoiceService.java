@@ -24,7 +24,7 @@ public interface InvoiceService {
 //
 //    List<InvoiceDto> findByInvoiceTypeAndStatus(InvoiceType type, InvoiceStatus status);
 //
-//    InvoiceDto printInvoice(Long id);
+    InvoiceDto printInvoice(Long id);
 //    BigDecimal countTotal(InvoiceType invoiceType);
 //    BigDecimal sumProfitLoss();
 
