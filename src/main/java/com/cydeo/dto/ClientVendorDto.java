@@ -50,6 +50,7 @@ public class ClientVendorDto {
     //JsonBackReference
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private CompanyDto company;
+
     private boolean hasInvoice;
 
 }

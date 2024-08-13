@@ -20,7 +20,7 @@ public interface InvoiceService {
 //
 //    void approve(InvoiceDto invoiceDto, InvoiceType invoiceType);
 //    List<InvoiceDto> listTop3Approved(InvoiceStatus invoiceStatus);
-    InvoiceDto setPriceTaxAndTotal(InvoiceDto invoiceDto);
+    void setPriceTaxAndTotal(InvoiceDto invoiceDto);
 //
 //    List<InvoiceDto> findByInvoiceTypeAndStatus(InvoiceType type, InvoiceStatus status);
 //
