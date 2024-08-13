@@ -6,9 +6,7 @@ import com.cydeo.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,6 +24,16 @@ public class ProductController {
                 .success(true)
                 .message("Product list is successfully retrieved.")
                 .data(products).build());
+    }
+
+    @PostMapping
+    public ResponseEntity<ResponseWrapper> createProduct(@RequestBody ProductDto product){
+        ProductDto productDto = productService.save(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.builder()
+                .code(HttpStatus.CREATED.value())
+                .success(true)
+                .message("Product is successfully created")
+                .data(productDto).build());
     }
 
 }

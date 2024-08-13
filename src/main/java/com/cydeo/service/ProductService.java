@@ -11,7 +11,7 @@ public interface ProductService {
     ProductDto findById(Long id);
     List<ProductDto> listProductsByCategoryAndName();
     ProductDto save(ProductDto productDto);
-    ProductDto update(ProductDto productDto);
+    ProductDto update(Long id, ProductDto productDto);
     void delete(Long id);
 //    List<ProductDto> listAllProductsByCompanyId(Long id);
 //    List<ProductDto> findAllInStock();

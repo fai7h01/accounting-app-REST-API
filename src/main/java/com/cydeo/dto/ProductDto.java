@@ -2,6 +2,7 @@ package com.cydeo.dto;
 
 import com.cydeo.enums.ProductUnit;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -25,6 +26,7 @@ public class ProductDto {
     @Column(unique = true, nullable = false)
     private String name;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer quantityInStock;
 
     @NotNull(message = "Low Limit Alert is a required field.")
@@ -37,5 +39,6 @@ public class ProductDto {
     @NotNull(message = "Category is a required field.")
     private CategoryDto category;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private boolean hasInvoiceProduct;
 }

@@ -50,10 +50,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto update(ProductDto productDto) {
-        Product product = mapperUtil.convert(productDto, new Product());
-        product.setCategory(mapperUtil.convert(productDto.getCategory(), new Category()));
-        productRepository.save(product);
+    public ProductDto update(Long id, ProductDto productDto) {
         return null;
     }
 
