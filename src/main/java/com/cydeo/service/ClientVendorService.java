@@ -11,4 +11,5 @@ public interface ClientVendorService {
     void delete(Long id);
     ClientVendorDto save(ClientVendorDto clientVendorDto);
     ClientVendorDto update(Long id, ClientVendorDto clientVendorDto);
+    ClientVendorDto findByName(String name);
 }

@@ -25,6 +25,7 @@ public class InvoiceDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private InvoiceStatus invoiceStatus = InvoiceStatus.AWAITING_APPROVAL;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private InvoiceType invoiceType;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -35,10 +36,13 @@ public class InvoiceDto {
 
     private ClientVendorDto clientVendor;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private BigDecimal price;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private BigDecimal tax;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private BigDecimal total;
 
 

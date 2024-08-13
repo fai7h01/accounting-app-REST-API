@@ -9,6 +9,7 @@ import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class ClientVendorServiceImpl implements ClientVendorService {
@@ -48,6 +49,15 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         ClientVendor updatedClientVendor = mapperUtil.convert(clientVendorDto, new ClientVendor());
         ClientVendor saved = clientVendorRepository.save(updatedClientVendor);
         return mapperUtil.convert(saved, new ClientVendorDto());
+    }
+
+    @Override
+    public ClientVendorDto findByName(String name) {
+        Optional<ClientVendor> clientVendor = clientVendorRepository.findByClientVendorNameIgnoreCaseAndCompanyId(name, companyService.getCompanyDtoByLoggedInUser().getId());
+        if (clientVendor.isPresent()){
+            return mapperUtil.convert(clientVendor.get(), new ClientVendorDto());
+        }
+        throw new NoSuchElementException("Client/Vendor not found.");
     }
 
     @Override

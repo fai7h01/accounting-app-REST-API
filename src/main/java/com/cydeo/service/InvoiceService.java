@@ -14,7 +14,7 @@ public interface InvoiceService {
     InvoiceDto findById(Long id);
     void delete(Long id);
     List<InvoiceDto> listAllByType(InvoiceType invoiceType);
-//    InvoiceDto generateInvoiceForCompanyByType(InvoiceType invoiceType);
+    InvoiceDto generateInvoice(InvoiceDto invoiceDto, InvoiceType invoiceType);
 //    void update(InvoiceDto invoiceDto);
 //    List<InvoiceDto> listAllByClientVendor(ClientVendor clientVendor);
 //
