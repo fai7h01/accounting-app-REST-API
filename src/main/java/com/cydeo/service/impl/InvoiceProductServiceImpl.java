@@ -112,19 +112,16 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
         for (InvoiceProduct each : approvedInvoiceProducts) {
             int remainingQuantity = each.getRemainingQuantity() - salesQuantity;
+            BigDecimal costWithoutTax = each.getPrice().multiply(BigDecimal.valueOf(each.getRemainingQuantity()));
+            BigDecimal tax = costWithoutTax.multiply(BigDecimal.valueOf(each.getTax())).divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP);
+            BigDecimal costWithTax = costWithoutTax.add(tax);
             if (remainingQuantity <= 0) {
-                BigDecimal costWithoutTax = each.getPrice().multiply(BigDecimal.valueOf(each.getRemainingQuantity()));
-                BigDecimal tax = costWithoutTax.multiply(BigDecimal.valueOf(each.getTax())).divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP);
-                BigDecimal costWithTax = costWithoutTax.add(tax);
                 salesQuantity -= each.getRemainingQuantity();
                 each.setRemainingQuantity(0);
                 totalCost = totalCost.add(costWithTax);
                 invoiceProductRepository.save(each);
                 if (remainingQuantity == 0) break;
             } else {
-                BigDecimal costWithoutTax = each.getPrice().multiply(BigDecimal.valueOf(each.getRemainingQuantity()));
-                BigDecimal tax = costWithoutTax.multiply(BigDecimal.valueOf(each.getTax())).divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP);
-                BigDecimal costWithTax = costWithoutTax.add(tax);
                 each.setRemainingQuantity(remainingQuantity);
                 totalCost = totalCost.add(costWithTax);
                 invoiceProductRepository.save(each);
