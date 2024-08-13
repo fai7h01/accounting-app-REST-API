@@ -65,16 +65,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void delete(Long id) {
-        Product deletedId = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        deletedId.setIsDeleted(true);
-        productRepository.save(deletedId);
+        Product foundProduct = productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Product not found."));
+        foundProduct.setIsDeleted(true);
+        foundProduct.setName(foundProduct.getName() + "-" + foundProduct.getId());
+        productRepository.save(foundProduct);
     }
 
     @Override
     public List<ProductDto> findAllByCategoryAndCompany(Category category) {
         Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
         List<Product> productList = productRepository.retrieveAllByCategoryIdAndCompanyId(category.getId(), companyId);
-        return productList.stream().map(product -> mapperUtil.convert(product, new ProductDto())).collect(Collectors.toList());
+        return productList.stream().map(product -> mapperUtil.convert(product, new ProductDto())).toList();
     }
 
 

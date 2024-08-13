@@ -45,4 +45,11 @@ public class ProductController {
                 .data(updatedProduct).build());
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ResponseWrapper> deleteProduct(@PathVariable Long id){
+        productService.delete(id);
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
+                .success(true).message("Product is successfully deleted.").build());
+    }
+
 }
