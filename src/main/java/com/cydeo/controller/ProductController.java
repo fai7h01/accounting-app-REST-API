@@ -32,8 +32,17 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.builder()
                 .code(HttpStatus.CREATED.value())
                 .success(true)
-                .message("Product is successfully created")
+                .message("Product is successfully created.")
                 .data(productDto).build());
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ResponseWrapper> updateProduct(@PathVariable Long id, @RequestBody ProductDto product){
+        ProductDto updatedProduct = productService.update(id, product);
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
+                .success(true)
+                .message("Product is successfully updated.")
+                .data(updatedProduct).build());
     }
 
 }

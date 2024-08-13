@@ -14,6 +14,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto findById(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Product product = productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Product not found."));
         return mapperUtil.convert(product, new ProductDto());
     }
 
@@ -57,7 +58,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto update(Long id, ProductDto productDto) {
-        return null;
+        ProductDto foundProduct = findById(id);
+        productDto.setId(foundProduct.getId());
+        return save(productDto);
     }
 
     @Override
