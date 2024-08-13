@@ -1,12 +1,15 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.CategoryDto;
 import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.Category;
 import com.cydeo.entity.Product;
 import com.cydeo.repository.ProductRepository;
+import com.cydeo.service.CategoryService;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.ProductService;
 import com.cydeo.util.MapperUtil;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +22,13 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final MapperUtil mapperUtil;
     private final CompanyService companyService;
+    private final CategoryService categoryService;
 
-    public ProductServiceImpl(ProductRepository productRepository, MapperUtil mapperUtil, CompanyService companyService) {
+    public ProductServiceImpl(ProductRepository productRepository, MapperUtil mapperUtil, CompanyService companyService, @Lazy CategoryService categoryService) {
         this.productRepository = productRepository;
         this.mapperUtil = mapperUtil;
         this.companyService = companyService;
+        this.categoryService = categoryService;
     }
 
     @Override
@@ -43,8 +48,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto save(ProductDto productDto) {
+        CategoryDto categoryDto = categoryService.findByDescription(productDto.getCategory().getDescription());
+        productDto.setCategory(categoryDto);
         Product product = mapperUtil.convert(productDto, new Product());
-        //product.setCategory(mapperUtil.convert(productDto.getCategory(), new Category()));
         Product saved = productRepository.save(product);
         return mapperUtil.convert(saved, new ProductDto());
     }

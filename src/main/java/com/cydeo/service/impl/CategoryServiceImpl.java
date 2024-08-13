@@ -43,6 +43,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public CategoryDto findByDescription(String desc) {
+        Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
+        Category category = categoryRepository.findByDescriptionAndCompanyId(desc, companyId).orElseThrow(() -> new NoSuchElementException("Category not found"));
+        return mapperUtil.convert(category, new CategoryDto());
+    }
+
+    @Override
     public List<CategoryDto> listCategoryByCompany() {
         Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
         return categoryRepository.findByCompanyIdOrderByDescriptionAsc(companyId).stream()
