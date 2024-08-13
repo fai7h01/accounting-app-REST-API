@@ -13,19 +13,19 @@ public interface InvoiceService {
     InvoiceDto save(InvoiceDto invoiceDto, InvoiceType invoiceType);
     InvoiceDto findById(Long id);
     void delete(Long id);
-    List<InvoiceDto> listAllByTypeAndCompany(InvoiceType invoiceType);
-    InvoiceDto generateInvoiceForCompanyByType(InvoiceType invoiceType);
-    void update(InvoiceDto invoiceDto);
-    List<InvoiceDto> listAllByClientVendor(ClientVendor clientVendor);
-
-    void approve(InvoiceDto invoiceDto, InvoiceType invoiceType);
-    List<InvoiceDto> listTop3Approved(InvoiceStatus invoiceStatus);
+    List<InvoiceDto> listAllByType(InvoiceType invoiceType);
+//    InvoiceDto generateInvoiceForCompanyByType(InvoiceType invoiceType);
+//    void update(InvoiceDto invoiceDto);
+//    List<InvoiceDto> listAllByClientVendor(ClientVendor clientVendor);
+//
+//    void approve(InvoiceDto invoiceDto, InvoiceType invoiceType);
+//    List<InvoiceDto> listTop3Approved(InvoiceStatus invoiceStatus);
     InvoiceDto setPriceTaxAndTotal(InvoiceDto invoiceDto);
-
-    List<InvoiceDto> findByInvoiceTypeAndStatus(InvoiceType type, InvoiceStatus status);
-
-    InvoiceDto printInvoice(Long id);
-    BigDecimal countTotal(InvoiceType invoiceType);
-    BigDecimal sumProfitLoss();
+//
+//    List<InvoiceDto> findByInvoiceTypeAndStatus(InvoiceType type, InvoiceStatus status);
+//
+//    InvoiceDto printInvoice(Long id);
+//    BigDecimal countTotal(InvoiceType invoiceType);
+//    BigDecimal sumProfitLoss();
 
 }

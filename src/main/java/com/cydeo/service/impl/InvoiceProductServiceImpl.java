@@ -68,16 +68,13 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
     public BigDecimal getInvoiceProductTotalWithTax(InvoiceProductDto invoiceProductDto) {
-
         BigDecimal totalWithoutTax = getInvoiceProductTotalWithoutTax(invoiceProductDto);
         BigDecimal tax = (totalWithoutTax.multiply(BigDecimal.valueOf(invoiceProductDto.getTax()))).divide(BigDecimal.valueOf(100), RoundingMode.DOWN);
-
         return totalWithoutTax.add(tax);
     }
 
     @Override
     public BigDecimal getInvoiceProductTotalWithoutTax(InvoiceProductDto invoiceProductDto) {
-
         return invoiceProductDto.getPrice().multiply(BigDecimal.valueOf(invoiceProductDto.getQuantity()));
     }
 

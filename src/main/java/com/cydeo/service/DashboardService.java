@@ -5,5 +5,5 @@ import java.util.Map;
 
 public interface DashboardService {
 
-    Map<String, BigDecimal> getSummaryNumbers();
+//    Map<String, BigDecimal> getSummaryNumbers();
 }
