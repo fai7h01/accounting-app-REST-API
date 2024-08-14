@@ -3,7 +3,6 @@ package com.cydeo.service.impl;
 import com.cydeo.dto.*;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Invoice;
-import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.repository.InvoiceRepository;
@@ -16,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -37,7 +36,10 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoiceDto save(InvoiceDto invoiceDto, InvoiceType invoiceType) {
+//        ClientVendorDto clientVendorDto = clientVendorService.findByName(invoiceDto.getClientVendor().getClientVendorName());
+//        clientVendorDto.setHasInvoice(true);
         InvoiceDto generatedInvoice = generateInvoice(invoiceDto, invoiceType);
+//        invoiceDto.getClientVendor().setId(clientVendorDto.getId());
         Invoice savedInvoice = invoiceRepository.save(mapperUtil.convert(generatedInvoice, new Invoice()));
         return mapperUtil.convert(savedInvoice, new InvoiceDto());
     }
@@ -63,8 +65,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDto generateInvoice(InvoiceDto invoiceDto, InvoiceType invoiceType) {
 
-        ClientVendorDto clientVendorDto = clientVendorService.findByName(invoiceDto.getClientVendor().getClientVendorName());
-
         int currentNo = listAllByType(invoiceType).size();
         String prefix = invoiceType.equals(InvoiceType.PURCHASE) ? "P" : "S";
         String invoiceNo = String.format("%s-%03d", prefix, currentNo + 1);
@@ -73,33 +73,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceDto.setInvoiceType(invoiceType);
         invoiceDto.setCompany(companyService.getCompanyDtoByLoggedInUser());
         invoiceDto.setInvoiceStatus(InvoiceStatus.AWAITING_APPROVAL);
-        invoiceDto.getClientVendor().setId(clientVendorDto.getId());
+
         return invoiceDto;
     }
 
-//    @Override
-//    public InvoiceDto generateInvoiceForCompanyByType(InvoiceType invoiceType) {
-//
-//        InvoiceDto invoiceDto = new InvoiceDto();
-//
-//        String prefix;
-//        int currentInvNum;
-//
-//        List<InvoiceDto> invoiceDtoList = listAllByTypeAndCompany(invoiceType);
-//
-//        if (invoiceType == InvoiceType.SALES) prefix = "S";
-//        else prefix = "P";
-//
-//        if (invoiceDtoList.isEmpty()) currentInvNum = 1;
-//        else {
-//            String numPart = invoiceDtoList.get(0).getInvoiceNo().substring(2);
-//            currentInvNum = Integer.parseInt(numPart) + 1;
-//        }
-//
-//        invoiceDto.setInvoiceNo(String.format("%s-%03d", prefix, currentInvNum));
-//        invoiceDto.setDate(LocalDateTime.now());
-//        return invoiceDto;
-//    }
+    @Override
+    public List<InvoiceDto> listAllByClientVendor(ClientVendor clientVendor) {
+        return List.of();
+    }
 
 
     @Override
@@ -118,23 +99,6 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     }
 
-
-//    @Override
-//    public void update(InvoiceDto invoiceDto) {
-//        Invoice invoice = invoiceRepository.findById(invoiceDto.getId()).orElseThrow(IllegalArgumentException::new);
-//        invoiceDto.setInvoiceStatus(invoice.getInvoiceStatus());
-//        invoiceDto.setCompany(new CompanyDto());
-//
-//        save(invoiceDto, invoice.getInvoiceType());
-//    }
-
-//    @Override
-//    public List<InvoiceDto> listAllByClientVendor(ClientVendor clientVendor) {
-//        List<Invoice> invoiceList = invoiceRepository.findByClientVendor(clientVendor);
-//
-//        return invoiceList.stream().map(invoice -> mapperUtil.convert(invoice, new InvoiceDto())).collect(Collectors.toList());
-//    }
-//
 //    @Override
 //    public void approve(InvoiceDto invoiceDto, InvoiceType invoiceType) {
 //        invoiceDto.setInvoiceStatus(InvoiceStatus.APPROVED);
