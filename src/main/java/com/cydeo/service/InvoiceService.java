@@ -15,8 +15,7 @@ public interface InvoiceService {
     void delete(Long id);
     List<InvoiceDto> listAllByType(InvoiceType invoiceType);
     InvoiceDto generateInvoice(InvoiceDto invoiceDto, InvoiceType invoiceType);
-//    void update(InvoiceDto invoiceDto);
-    List<InvoiceDto> listAllByClientVendor(ClientVendor clientVendor);
+    InvoiceDto update(Long id, InvoiceDto invoiceDto);
 //
 //    void approve(InvoiceDto invoiceDto, InvoiceType invoiceType);
 //    List<InvoiceDto> listTop3Approved(InvoiceStatus invoiceStatus);

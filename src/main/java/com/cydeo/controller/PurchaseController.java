@@ -32,7 +32,7 @@ public class PurchaseController {
         InvoiceDto invoiceDto = invoiceService.printInvoice(id);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)
-                .message("Purchase invoice is retrieved successfully.")
+                .message("Purchase invoice is successfully retrieved.")
                 .data(invoiceDto).build());
     }
 
@@ -44,8 +44,16 @@ public class PurchaseController {
                 .success(true)
                 .message("Purchase invoice is successfully created.")
                 .data(invoiceDto).build());
-
     }
 
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ResponseWrapper> updatePurchaseInvoice(@PathVariable Long id, @RequestBody InvoiceDto invoice){
+        InvoiceDto updatedInvoice = invoiceService.update(id, invoice);
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
+                .success(true)
+                .message("Purchase invoice is successfully updated.")
+                .data(updatedInvoice).build());
+    }
 
 }

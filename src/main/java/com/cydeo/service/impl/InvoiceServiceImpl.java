@@ -77,8 +77,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<InvoiceDto> listAllByClientVendor(ClientVendor clientVendor) {
-        return List.of();
+    public InvoiceDto update(Long id, InvoiceDto invoiceDto) {
+        ClientVendorDto clientVendor = clientVendorService.findByName(invoiceDto.getClientVendor().getClientVendorName());
+        Invoice foundInvoice = invoiceRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice not found."));
+        InvoiceDto invoiceInDB = mapperUtil.convert(foundInvoice, new InvoiceDto());
+        invoiceInDB.setClientVendor(clientVendor);
+        Invoice saved = invoiceRepository.save(mapperUtil.convert(invoiceInDB, new Invoice()));
+        return mapperUtil.convert(saved, new InvoiceDto());
     }
 
 
