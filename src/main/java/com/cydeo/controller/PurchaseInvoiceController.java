@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/purchaseInvoice")
 @RequiredArgsConstructor
-public class PurchaseController {
+public class PurchaseInvoiceController {
 
     private final InvoiceService invoiceService;
 
@@ -54,6 +54,14 @@ public class PurchaseController {
                 .success(true)
                 .message("Purchase invoice is successfully updated.")
                 .data(updatedInvoice).build());
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ResponseWrapper> deletePurchaseInvoice(@PathVariable Long id){
+        invoiceService.delete(id);
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
+                .success(true)
+                .message("Purchase invoice is successfully deleted.").build());
     }
 
 }

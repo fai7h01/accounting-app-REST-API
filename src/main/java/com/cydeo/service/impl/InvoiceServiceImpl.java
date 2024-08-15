@@ -1,7 +1,6 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.dto.*;
-import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Invoice;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
@@ -14,7 +13,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 
 @Service
@@ -89,18 +87,11 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void delete(Long id) {
-
-        Optional<Invoice> invoice = invoiceRepository.findById(id);
-
-        if (invoice.isPresent()) {
-            invoice.get().setIsDeleted(true);
-            invoiceRepository.save(invoice.get());
-        }
-        if (invoice.get().getInvoiceType().equals(InvoiceType.PURCHASE)) {
-            List<InvoiceProductDto> invoiceProductDtos = invoiceProductService.listAllByInvoiceId(invoice.get().getId());
-            invoiceProductDtos.forEach(ip -> invoiceProductService.deleteById(ip.getId()));
-        }
-
+        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice not found."));
+        invoice.setIsDeleted(true);
+        List<InvoiceProductDto> invoiceProducts = invoiceProductService.listAllByInvoiceId(invoice.getId());
+        invoiceProducts.forEach(ip -> invoiceProductService.deleteById(ip.getId()));
+        invoiceRepository.save(invoice);
     }
 
 //    @Override

@@ -2,6 +2,7 @@ package com.cydeo.entity;
 
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,8 +15,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "invoices")
-@Where(clause = "is_deleted = false")
+@Where(clause = "is_deleted = false") //might be removed
 public class Invoice extends BaseEntity {
 
     @Column(name = "invoice_no")
