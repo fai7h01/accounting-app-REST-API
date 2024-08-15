@@ -36,10 +36,9 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoiceDto save(InvoiceDto invoiceDto, InvoiceType invoiceType) {
-//        ClientVendorDto clientVendorDto = clientVendorService.findByName(invoiceDto.getClientVendor().getClientVendorName());
-//        clientVendorDto.setHasInvoice(true);
+        ClientVendorDto clientVendorDto = clientVendorService.findByName(invoiceDto.getClientVendor().getClientVendorName());
         InvoiceDto generatedInvoice = generateInvoice(invoiceDto, invoiceType);
-//        invoiceDto.getClientVendor().setId(clientVendorDto.getId());
+        invoiceDto.setClientVendor(clientVendorDto);
         Invoice savedInvoice = invoiceRepository.save(mapperUtil.convert(generatedInvoice, new Invoice()));
         return mapperUtil.convert(savedInvoice, new InvoiceDto());
     }

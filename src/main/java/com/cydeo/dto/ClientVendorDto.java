@@ -51,6 +51,7 @@ public class ClientVendorDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private CompanyDto company;
 
+    @JsonIgnore
     private boolean hasInvoice;
 
 }

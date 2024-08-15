@@ -36,8 +36,8 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     public ClientVendorDto save(ClientVendorDto clientVendorDto) {
         clientVendorDto.setCompany(getLoggedInCompany());
         ClientVendor clientVendor = mapperUtil.convert(clientVendorDto, new ClientVendor());
-        clientVendorRepository.save(clientVendor);
-        return mapperUtil.convert(clientVendor, new ClientVendorDto());
+        ClientVendor saved = clientVendorRepository.save(clientVendor);
+        return mapperUtil.convert(saved, new ClientVendorDto());
     }
 
     @Override
