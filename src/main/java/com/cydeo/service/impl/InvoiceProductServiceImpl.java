@@ -1,5 +1,6 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.InvoiceProduct;
@@ -53,10 +54,12 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
                 .toList();
     }
 
-    @Override
+    @Override// set product and invoice, get product by name and company for sure
     public InvoiceProductDto save(InvoiceProductDto invoiceProductDto) {
-        InvoiceProduct entity = mapperUtil.convert(invoiceProductDto, new InvoiceProduct());
-        return mapperUtil.convert(repository.save(entity), new InvoiceProductDto());
+        ProductDto product = productService.findByNameInCompany(invoiceProductDto.getProduct().getName());
+        invoiceProductDto.setProduct(product);
+        InvoiceProduct saved = invoiceProductRepository.save(mapperUtil.convert(invoiceProductDto, new InvoiceProduct()));
+        return mapperUtil.convert(saved, new InvoiceProductDto());
     }
 
     @Override
@@ -101,7 +104,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
             BigDecimal profitLoss = getInvoiceProductTotalWithTax(each)
                     .subtract(calculateCost(productId, each.getQuantity()));
             each.setProfitLoss(profitLoss);
-            save(each);
+           // save(each);
         }
     }
 

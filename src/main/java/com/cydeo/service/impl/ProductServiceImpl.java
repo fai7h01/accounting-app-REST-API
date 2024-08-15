@@ -39,7 +39,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> listProductsByCategoryAndName() {
+    public List<ProductDto> listProductsSortedByCategoryAndName() {
         Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
         List<Product> sortedProducts = productRepository.findByCompanyIdOrderByCategoryDescriptionAndProductNameAsc(companyId);
         return sortedProducts.stream()
@@ -69,6 +69,13 @@ public class ProductServiceImpl implements ProductService {
         foundProduct.setIsDeleted(true);
         foundProduct.setName(foundProduct.getName() + "-" + foundProduct.getId());
         productRepository.save(foundProduct);
+    }
+
+    @Override
+    public ProductDto findByNameInCompany(String name) {
+        Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
+        Product product = productRepository.findByNameAndCategoryCompanyId(name, companyId).orElseThrow(() -> new NoSuchElementException("Product not found."));
+        return mapperUtil.convert(product, new ProductDto());
     }
 
     @Override

@@ -19,7 +19,7 @@ public class ProductController {
 
     @GetMapping("/list")
     public ResponseEntity<ResponseWrapper> listAllProducts(){
-        List<ProductDto> products = productService.listProductsByCategoryAndName();
+        List<ProductDto> products = productService.listProductsSortedByCategoryAndName();
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)
                 .message("Product list is successfully retrieved.")
