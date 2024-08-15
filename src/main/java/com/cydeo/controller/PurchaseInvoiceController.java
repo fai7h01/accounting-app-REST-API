@@ -64,4 +64,13 @@ public class PurchaseInvoiceController {
                 .message("Purchase invoice is successfully deleted.").build());
     }
 
+    @GetMapping("/approve/{id}")
+    public ResponseEntity<ResponseWrapper> approvePurchaseInvoice(@PathVariable Long id){
+        InvoiceDto foundInvoice = invoiceService.findById(id);
+        invoiceService.approve(foundInvoice, InvoiceType.PURCHASE);
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
+                .success(true)
+                .message("Purchase invoice is successfully approved.").build());
+    }
+
 }

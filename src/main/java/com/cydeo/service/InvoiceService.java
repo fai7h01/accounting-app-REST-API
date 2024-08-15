@@ -16,14 +16,13 @@ public interface InvoiceService {
     List<InvoiceDto> listAllByType(InvoiceType invoiceType);
     InvoiceDto generateInvoice(InvoiceDto invoiceDto, InvoiceType invoiceType);
     InvoiceDto update(Long id, InvoiceDto invoiceDto);
-//
-//    void approve(InvoiceDto invoiceDto, InvoiceType invoiceType);
-//    List<InvoiceDto> listTop3Approved(InvoiceStatus invoiceStatus);
     void setPriceTaxAndTotal(InvoiceDto invoiceDto);
+    InvoiceDto printInvoice(Long id);
+    void approve(InvoiceDto invoiceDto, InvoiceType invoiceType);
+//    List<InvoiceDto> listTop3Approved(InvoiceStatus invoiceStatus);
 //
 //    List<InvoiceDto> findByInvoiceTypeAndStatus(InvoiceType type, InvoiceStatus status);
 //
-    InvoiceDto printInvoice(Long id);
 //    BigDecimal countTotal(InvoiceType invoiceType);
 //    BigDecimal sumProfitLoss();
 

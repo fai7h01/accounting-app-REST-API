@@ -175,4 +175,12 @@ public class InvoiceServiceImpl implements InvoiceService {
         return dto;
     }
 
+    @Override
+    public void approve(InvoiceDto invoiceDto, InvoiceType invoiceType) {
+        invoiceDto.setInvoiceStatus(InvoiceStatus.APPROVED);
+        invoiceDto.setDate(LocalDateTime.now());
+        List<InvoiceProductDto> invoiceProducts =invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
+        //...
+    }
+
 }
