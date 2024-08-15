@@ -68,7 +68,7 @@ public class PurchaseInvoiceController {
     }
 
     @PostMapping("/add/invoiceProduct/{id}")
-    public ResponseEntity<ResponseWrapper> addInvoiceProductToPurchaseInvoice(@PathVariable Long id, @RequestBody InvoiceProductDto invoiceProduct){
+    public ResponseEntity<ResponseWrapper> addInvoiceProductToInvoice(@PathVariable Long id, @RequestBody InvoiceProductDto invoiceProduct){
         InvoiceDto invoice = invoiceService.findById(id);
         invoiceProduct.setInvoice(invoice);
         InvoiceProductDto saved = invoiceProductService.save(invoiceProduct);
@@ -78,10 +78,12 @@ public class PurchaseInvoiceController {
                 .data(saved).build());
     }
 
-    @GetMapping("/invoiceProduct/list")
-    public ResponseEntity<ResponseWrapper> list(){
-        InvoiceProductDto list = invoiceProductService.listAllByInvoiceId(1L).get(0);
-        return ResponseEntity.ok(ResponseWrapper.builder().data(list).build());
+    @DeleteMapping("/remove/invoiceProduct/{invoiceProductId}")
+    public ResponseEntity<ResponseWrapper> removeInvoiceProductFromInvoice(@PathVariable("invoiceProductId") Long id){
+        invoiceProductService.delete(id);//TODO check implementation
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
+                .success(true)
+                .message("Product is successfully deleted from invoice.").build());
     }
 
 

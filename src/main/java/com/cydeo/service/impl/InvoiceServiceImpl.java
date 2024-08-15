@@ -90,7 +90,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice not found."));
         invoice.setIsDeleted(true);
         List<InvoiceProductDto> invoiceProducts = invoiceProductService.listAllByInvoiceId(invoice.getId());
-        invoiceProducts.forEach(ip -> invoiceProductService.deleteById(ip.getId()));
+        invoiceProducts.forEach(ip -> invoiceProductService.delete(ip.getId()));
         invoiceRepository.save(invoice);
     }
 

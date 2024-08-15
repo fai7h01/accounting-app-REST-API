@@ -1,6 +1,5 @@
 package com.cydeo.service;
 
-import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
 
 import java.math.BigDecimal;
@@ -15,7 +14,7 @@ public interface InvoiceProductService {
 
     InvoiceProductDto save(InvoiceProductDto invoiceProductDto);
 
-    void deleteById(Long id);
+    void delete(Long id);
 
     BigDecimal getInvoiceProductTotalWithTax(InvoiceProductDto invoiceProductDto);
 
