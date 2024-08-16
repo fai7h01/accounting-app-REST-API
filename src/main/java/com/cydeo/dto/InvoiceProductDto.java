@@ -25,13 +25,11 @@ public class InvoiceProductDto {
 
     @NotNull(message = "Price is a required field.")
     @Min(value = 1, message = "Price should be at least $1")
-
     private BigDecimal price;
 
     @NotNull(message = "Tax is a required field.")
     @Min(value = 0, message = "Tax should be between 0% and 20%")
     @Max(value = 20, message = "Tax should be between 0% and 20%")
-
     private Integer tax;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
