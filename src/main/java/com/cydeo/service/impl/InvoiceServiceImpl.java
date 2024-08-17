@@ -143,4 +143,20 @@ public class InvoiceServiceImpl implements InvoiceService {
         return monthlyProfitLoss;
     }
 
+    @Override
+    public BigDecimal countTotal(InvoiceType invoiceType) {
+        return listAllByType(invoiceType).stream()
+                .filter(invoiceDto -> invoiceDto.getInvoiceStatus().equals(InvoiceStatus.APPROVED))
+                .map(InvoiceDto::getTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @Override
+    public BigDecimal sumProfitLoss() {
+        return invoiceRepository.findApprovedSalesInvoices(companyService.getCompanyDtoByLoggedInUser().getId())
+                .stream().map(invoice -> invoiceProductService.listAllByInvoiceIdAndCalculateTotalPrice(invoice.getId())
+                        .stream().map(InvoiceProductDto::getProfitLoss).reduce(BigDecimal.ZERO, BigDecimal::add))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
 }
