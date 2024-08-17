@@ -1,11 +1,12 @@
 package com.cydeo.service.impl;
 
-import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.entity.Product;
+import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.repository.InvoiceProductRepository;
+import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.ProductService;
@@ -20,30 +21,30 @@ import java.util.NoSuchElementException;
 @Service
 public class InvoiceProductServiceImpl implements InvoiceProductService {
 
-    private final InvoiceProductRepository repository;
-    private final MapperUtil mapperUtil;
     private final InvoiceProductRepository invoiceProductRepository;
+    private final MapperUtil mapperUtil;
     private final ProductService productService;
     private final CompanyService companyService;
+    private final InvoiceRepository invoiceRepository;
 
-    public InvoiceProductServiceImpl(InvoiceProductRepository repository, MapperUtil mapperUtil, InvoiceProductRepository invoiceProductRepository, ProductService productService, CompanyService companyService) {
-        this.repository = repository;
+    public InvoiceProductServiceImpl(InvoiceProductRepository repository, MapperUtil mapperUtil, ProductService productService, CompanyService companyService, InvoiceRepository invoiceRepository) {
+        this.invoiceProductRepository = repository;
         this.mapperUtil = mapperUtil;
-        this.invoiceProductRepository = invoiceProductRepository;
         this.productService = productService;
         this.companyService = companyService;
+        this.invoiceRepository = invoiceRepository;
     }
 
 
     @Override
     public InvoiceProductDto findById(Long id) {
-        InvoiceProduct foundInvoiceProduct = repository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice Product not found."));
+        InvoiceProduct foundInvoiceProduct = invoiceProductRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice Product not found."));
         return mapperUtil.convert(foundInvoiceProduct, new InvoiceProductDto());
     }
 
     @Override
     public List<InvoiceProductDto> listAllByInvoiceId(Long id) {
-        return repository.findAllByInvoiceId(id).stream()
+        return invoiceProductRepository.findAllByInvoiceId(id).stream()
                 .map(invoiceProduct -> {
                     InvoiceProductDto invoiceProductDto = mapperUtil.convert(invoiceProduct, new InvoiceProductDto());
                     invoiceProductDto.setTotal(getInvoiceProductTotalWithTax(invoiceProductDto));
@@ -62,9 +63,9 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
     public void delete(Long id) {
-        InvoiceProduct invoiceProduct = repository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice Product not found."));
+        InvoiceProduct invoiceProduct = invoiceProductRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice Product not found."));
         invoiceProduct.setIsDeleted(true);
-        repository.save(invoiceProduct);
+        invoiceProductRepository.save(invoiceProduct);
     }
 
     @Override
@@ -135,12 +136,12 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
                 salesQuantity -= each.getRemainingQuantity();
                 each.setRemainingQuantity(0);
                 totalCost = totalCost.add(costWithTax);
-                repository.save(each);
+                invoiceProductRepository.save(each);
                 if (remainingQuantity == 0) break;
             }else{
                 each.setRemainingQuantity(remainingQuantity);
                 totalCost = totalCost.add(costWithTax);
-                repository.save(each);
+                invoiceProductRepository.save(each);
                 break;
             }
         }
@@ -148,13 +149,22 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     }
 
     @Override
-    public List<InvoiceProductDto> findAllByInvoiceIdAndCalculateTotalPrice(Long invoiceId) {
-        return repository.findAllByInvoiceId(invoiceId).stream()
+    public List<InvoiceProductDto> listAllByInvoiceIdAndCalculateTotalPrice(Long invoiceId) {
+        return invoiceProductRepository.findAllByInvoiceId(invoiceId).stream()
                 .map(invoiceProduct -> {
                     InvoiceProductDto dto = mapperUtil.convert(invoiceProduct, new InvoiceProductDto());
                     dto.setTotal(getInvoiceProductTotalWithTax(dto));
                     return dto;
                 }).toList();
+    }
+
+    @Override
+    public List<InvoiceProductDto> listAllApprovedInvoiceProducts() {
+        Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findByInvoiceCompanyIdAndInvoiceInvoiceStatusOrderByInvoiceDateDesc(companyId, InvoiceStatus.APPROVED);
+        return invoiceProducts.stream()
+                .map(invoiceProduct -> mapperUtil.convert(invoiceProduct, new InvoiceProductDto()))
+                .toList();
     }
 
 

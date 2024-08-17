@@ -26,7 +26,7 @@ public class ReportingController {
 
     @GetMapping("/stockData")
     public ResponseEntity<ResponseWrapper> showStockReports(){
-        List<InvoiceProductDto> invoiceProducts = invoiceProductService.findAllApprovedInvoiceProducts();
+        List<InvoiceProductDto> invoiceProducts = invoiceProductService.listAllApprovedInvoiceProducts();
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)
                 .message("All approved invoice products data is successfully retrieved.")

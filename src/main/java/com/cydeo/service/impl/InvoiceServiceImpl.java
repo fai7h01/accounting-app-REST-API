@@ -111,7 +111,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void setPriceTaxAndTotal(InvoiceDto invoiceDto) {
-        List<InvoiceProductDto> invoiceProductDtoList = invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
+        List<InvoiceProductDto> invoiceProductDtoList = invoiceProductService.listAllByInvoiceIdAndCalculateTotalPrice(invoiceDto.getId());
         BigDecimal totalPrice = invoiceProductDtoList.stream().map(invoiceProductService::getInvoiceProductTotalWithoutTax).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal totalWithTax = invoiceProductDtoList.stream().map(invoiceProductService::getInvoiceProductTotalWithTax).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal totalTax = totalWithTax.subtract(totalPrice);

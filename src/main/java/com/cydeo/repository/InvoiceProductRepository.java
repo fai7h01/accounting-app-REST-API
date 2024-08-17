@@ -2,6 +2,7 @@ package com.cydeo.repository;
 
 import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.entity.Product;
+import com.cydeo.enums.InvoiceStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -21,5 +22,8 @@ public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct, 
             "AND ip.remainingQuantity > 0 AND ip.invoice.invoiceStatus = 'APPROVED' " +
             "AND ip.invoice.invoiceType = 'PURCHASE' AND ip.invoice.company.id = ?2 ORDER BY ip.id asc")
     List<InvoiceProduct> findApprovedPurchaseInvoices(Long productId, Long companyId);
+
+    List<InvoiceProduct> findByInvoiceCompanyIdAndInvoiceInvoiceStatusOrderByInvoiceDateDesc(Long invoiceCompanyId, InvoiceStatus invoicInvoiceStatus);
+
 
 }

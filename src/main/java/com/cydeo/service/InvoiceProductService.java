@@ -24,5 +24,7 @@ public interface InvoiceProductService {
     void updateRemainingQuantityUponApproval(Long id);
     void calculateProfitLoss(Long id);
 
-    List<InvoiceProductDto> findAllByInvoiceIdAndCalculateTotalPrice(Long invoiceId);
+    List<InvoiceProductDto> listAllByInvoiceIdAndCalculateTotalPrice(Long invoiceId);
+
+    List<InvoiceProductDto> listAllApprovedInvoiceProducts();
 }
