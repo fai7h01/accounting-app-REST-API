@@ -25,7 +25,7 @@ public class DashboardController {
     private final InvoiceService invoiceService;
 
     @GetMapping("/usdExchangeRates")
-    public ResponseEntity<ResponseWrapper> getUsdExchangeRatesForDashboard(){
+    public ResponseEntity<ResponseWrapper> getUsdExchangeRatesForDashboard() {
         CurrencyDto currencyDto = dashboardService.listUsdExchangeRate();
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)
@@ -34,7 +34,7 @@ public class DashboardController {
     }
 
     @GetMapping("/summaryNumbers")
-    public ResponseEntity<ResponseWrapper> getSummaryNumbersForDashboard(){
+    public ResponseEntity<ResponseWrapper> getSummaryNumbersForDashboard() {
         Map<String, BigDecimal> summaryNumbers = dashboardService.getSummaryNumbers();
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)
@@ -43,7 +43,7 @@ public class DashboardController {
     }
 
     @GetMapping("/lastThreeApproved")
-    public ResponseEntity<ResponseWrapper> getLastThreeApprovedInvoicesForDashboard(){
+    public ResponseEntity<ResponseWrapper> getLastThreeApprovedInvoicesForDashboard() {
         List<InvoiceDto> invoices = invoiceService.listLastThreeApproved();
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)

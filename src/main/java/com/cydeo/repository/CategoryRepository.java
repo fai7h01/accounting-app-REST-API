@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     List<Category> findByCompanyIdOrderByDescriptionAsc(Long companyId);
-    Optional<Category> findByDescriptionAndCompanyId(String desc, Long companyId);
 
+    Optional<Category> findByDescriptionAndCompanyId(String desc, Long companyId);
 }

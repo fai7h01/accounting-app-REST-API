@@ -99,10 +99,10 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setInvoiceStatus(InvoiceStatus.APPROVED);
         invoice.setDate(LocalDateTime.now());
         invoiceRepository.save(invoice);
-        if (invoice.getInvoiceType().equals(InvoiceType.PURCHASE)){
+        if (invoice.getInvoiceType().equals(InvoiceType.PURCHASE)) {
             invoiceProductService.updateQuantityInStockForPurchase(id);
             invoiceProductService.updateRemainingQuantityUponApproval(id);
-        }else{
+        } else {
             invoiceProductService.updateQuantityInStockForSale(id);
             invoiceProductService.calculateProfitLoss(id);
         }
@@ -166,7 +166,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.findApprovedSalesInvoices(companyService.getCompanyDtoByLoggedInUser().getId())
                 .stream().map(invoice -> invoiceProductService.listAllByInvoiceIdAndCalculateTotalPrice(invoice.getId())
                         .stream().map(InvoiceProductDto::getProfitLoss).reduce(BigDecimal.ZERO, BigDecimal::add))
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
 }
