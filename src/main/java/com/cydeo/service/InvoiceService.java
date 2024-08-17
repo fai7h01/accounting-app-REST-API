@@ -21,6 +21,7 @@ public interface InvoiceService {
     InvoiceDto printInvoice(Long id);
     void approve(Long id);
     Map<String, BigDecimal> getMonthlyProfitLossMap();
+    List<InvoiceDto> listLastThreeApproved();
     BigDecimal countTotal(InvoiceType invoiceType);
     BigDecimal sumProfitLoss();
 

@@ -144,6 +144,16 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    public List<InvoiceDto> listLastThreeApproved() {
+        return invoiceRepository.findTop3ByCompanyIdAndInvoiceStatusOrderByDateDesc(companyService.getCompanyDtoByLoggedInUser().getId(), InvoiceStatus.APPROVED)
+                .stream().map(invoice -> {
+                    InvoiceDto dto = mapperUtil.convert(invoice, new InvoiceDto());
+                    setPriceTaxAndTotal(dto);
+                    return dto;
+                }).toList();
+    }
+
+    @Override
     public BigDecimal countTotal(InvoiceType invoiceType) {
         return listAllByType(invoiceType).stream()
                 .filter(invoiceDto -> invoiceDto.getInvoiceStatus().equals(InvoiceStatus.APPROVED))

@@ -19,7 +19,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     List<Invoice> findByInvoiceTypeAndInvoiceStatusAndCompanyTitleOrderByDateAsc(InvoiceType type, InvoiceStatus status, String title);
 
 
-    List<Invoice> findTop3ByInvoiceStatusAndCompany_TitleOrderByDateDesc(InvoiceStatus status, String title);
+    List<Invoice> findTop3ByCompanyIdAndInvoiceStatusOrderByDateDesc(Long id, InvoiceStatus status);
 
     @Query("SELECT i FROM Invoice i WHERE i.company.id = ?1 AND i.invoiceStatus = 'APPROVED' AND i.invoiceType = 'SALES'")
     List<Invoice> findApprovedSalesInvoices(Long id);
