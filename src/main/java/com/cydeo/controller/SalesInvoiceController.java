@@ -14,24 +14,24 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/purchaseInvoice")
+@RequestMapping("/api/v1/salesInvoice")
 @RequiredArgsConstructor
-public class PurchaseInvoiceController {
+public class SalesInvoiceController {
 
     private final InvoiceService invoiceService;
     private final InvoiceProductService invoiceProductService;
 
     @GetMapping("/list")
-    public ResponseEntity<ResponseWrapper> listPurchaseInvoices(){
-        List<InvoiceDto> invoices = invoiceService.listAllByType(InvoiceType.PURCHASE);
+    public ResponseEntity<ResponseWrapper> listSalesInvoices(){
+        List<InvoiceDto> invoices = invoiceService.listAllByType(InvoiceType.SALES);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)
-                .message("Purchase invoice list is successfully retrieved.")
+                .message("Sales invoice list is successfully retrieved.")
                 .data(invoices).build());
     }
 
     @GetMapping("/print/{id}")
-    public ResponseEntity<ResponseWrapper> printPurchaseInvoice(@PathVariable Long id){
+    public ResponseEntity<ResponseWrapper> printSalesInvoice(@PathVariable Long id){
         InvoiceDto invoiceDto = invoiceService.printInvoice(id);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)
@@ -40,34 +40,34 @@ public class PurchaseInvoiceController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseWrapper> createPurchaseInvoice(@RequestBody InvoiceDto invoice){
-        InvoiceDto invoiceDto = invoiceService.save(invoice, InvoiceType.PURCHASE);
+    public ResponseEntity<ResponseWrapper> createSalesInvoice(@RequestBody InvoiceDto invoice){
+        InvoiceDto invoiceDto = invoiceService.save(invoice, InvoiceType.SALES);
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.builder()
                 .code(HttpStatus.CREATED.value())
                 .success(true)
-                .message("Purchase invoice is successfully created.")
+                .message("Sales invoice is successfully created.")
                 .data(invoiceDto).build());
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ResponseWrapper> updatePurchaseInvoice(@PathVariable Long id, @RequestBody InvoiceDto invoice){
+    public ResponseEntity<ResponseWrapper> updateSalesInvoice(@PathVariable Long id, @RequestBody InvoiceDto invoice){
         InvoiceDto updatedInvoice = invoiceService.update(id, invoice);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)
-                .message("Purchase invoice is successfully updated.")
+                .message("Sales invoice is successfully updated.")
                 .data(updatedInvoice).build());
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ResponseWrapper> deletePurchaseInvoice(@PathVariable Long id){
+    public ResponseEntity<ResponseWrapper> deleteSalesInvoice(@PathVariable Long id){
         invoiceService.delete(id);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)
-                .message("Purchase invoice is successfully deleted.").build());
+                .message("Sales invoice is successfully deleted.").build());
     }
 
     @PostMapping("/add/invoiceProduct/{id}")
-    public ResponseEntity<ResponseWrapper> addInvoiceProductToPurchaseInvoice(@PathVariable Long id, @RequestBody InvoiceProductDto invoiceProduct){
+    public ResponseEntity<ResponseWrapper> addInvoiceProductToSalesInvoice(@PathVariable Long id, @RequestBody InvoiceProductDto invoiceProduct){
         InvoiceDto invoice = invoiceService.findById(id);
         invoiceProduct.setInvoice(invoice);
         InvoiceProductDto saved = invoiceProductService.save(invoiceProduct);
@@ -78,7 +78,7 @@ public class PurchaseInvoiceController {
     }
 
     @DeleteMapping("/remove/invoiceProduct/{id}")
-    public ResponseEntity<ResponseWrapper> removeInvoiceProductFromPurchaseInvoice(@PathVariable Long id){
+    public ResponseEntity<ResponseWrapper> removeInvoiceProductFromSalesInvoice(@PathVariable Long id){
         invoiceProductService.delete(id);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)
@@ -86,7 +86,7 @@ public class PurchaseInvoiceController {
     }
 
     @GetMapping("/approve/{id}")
-    public ResponseEntity<ResponseWrapper> approvePurchaseInvoice(@PathVariable Long id){
+    public ResponseEntity<ResponseWrapper> approveSalesInvoice(@PathVariable Long id){
         invoiceService.approve(id);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)
