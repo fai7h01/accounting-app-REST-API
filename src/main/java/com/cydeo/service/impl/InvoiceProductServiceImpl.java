@@ -81,9 +81,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
     public void updateQuantityInStockForSale(Long id) {
-
         List<Product> products = invoiceProductRepository.findProductsByInvoiceId(id);
-
         for (Product product : products) {
             int stock = product.getQuantityInStock() - invoiceProductRepository.sumQuantityOfProducts(id, product.getId());
             if (stock < 0) {
@@ -128,22 +126,21 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
         List<InvoiceProduct> approvedInvoiceProducts = invoiceProductRepository.findApprovedPurchaseInvoices(productId, companyId);
         BigDecimal totalCost = BigDecimal.ZERO;
-
         for (InvoiceProduct each : approvedInvoiceProducts) {
             int remainingQuantity = each.getRemainingQuantity() - salesQuantity;
             BigDecimal costWithoutTax = each.getPrice().multiply(BigDecimal.valueOf(each.getRemainingQuantity()));
             BigDecimal tax = costWithoutTax.multiply(BigDecimal.valueOf(each.getTax())).divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP);
             BigDecimal costWithTax = costWithoutTax.add(tax);
-            if (remainingQuantity <= 0) {
+            if (remainingQuantity <= 0){
                 salesQuantity -= each.getRemainingQuantity();
                 each.setRemainingQuantity(0);
                 totalCost = totalCost.add(costWithTax);
-                invoiceProductRepository.save(each);
+                repository.save(each);
                 if (remainingQuantity == 0) break;
-            } else {
+            }else{
                 each.setRemainingQuantity(remainingQuantity);
                 totalCost = totalCost.add(costWithTax);
-                invoiceProductRepository.save(each);
+                repository.save(each);
                 break;
             }
         }
