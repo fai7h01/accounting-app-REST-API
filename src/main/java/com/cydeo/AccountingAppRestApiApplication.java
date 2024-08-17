@@ -1,6 +1,5 @@
 package com.cydeo;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 @EnableFeignClients
 public class AccountingAppRestApiApplication {
 
-    public static void main(String[] args) throws JsonProcessingException {
+    public static void main(String[] args) {
         SpringApplication.run(AccountingAppRestApiApplication.class, args);
     }
 
