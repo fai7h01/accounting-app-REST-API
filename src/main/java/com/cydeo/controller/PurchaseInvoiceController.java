@@ -79,7 +79,7 @@ public class PurchaseInvoiceController {
 
     @DeleteMapping("/remove/invoiceProduct/{id}")
     public ResponseEntity<ResponseWrapper> removeInvoiceProductFromInvoice(@PathVariable Long id){
-        invoiceProductService.delete(id);//TODO check implementation
+        invoiceProductService.delete(id);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)
                 .message("Product is successfully deleted from invoice.").build());

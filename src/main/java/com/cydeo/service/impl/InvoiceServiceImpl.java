@@ -109,30 +109,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
     }
 
-//    @Override
-//    public void approve(InvoiceDto invoiceDto, InvoiceType invoiceType) {
-//        invoiceDto.setInvoiceStatus(InvoiceStatus.APPROVED);
-//        invoiceDto.setDate(LocalDateTime.now());
-//        List<InvoiceProductDto> invoiceProductDtos = invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
-//
-//        if (invoiceDto.getInvoiceType().equals(InvoiceType.PURCHASE)) {
-//            invoiceProductDtos.forEach(i -> {
-//                InvoiceProduct invoiceProduct = mapperUtil.convert(invoiceProductService.findById(i.getId()), new InvoiceProduct());
-//                invoiceProduct.setRemainingQuantity(i.getQuantity());
-//                invoiceProductService.save(mapperUtil.convert(invoiceProduct, new InvoiceProductDto()));
-//                ProductDto productDto = i.getProduct();
-//                productDto.setQuantityInStock(i.getProduct().getQuantityInStock() + i.getQuantity());
-//                productService.save(productDto);
-//            });
-//        } else {
-//            invoiceProductService.updateQuantityInStockForSale(invoiceDto.getId());
-//            invoiceProductService.calculateProfitLoss(invoiceDto.getId());
-//        }
-//        invoiceProductDtos.forEach(i -> i.getProduct().setQuantityInStock(i.getProduct().getQuantityInStock() + i.getQuantity()));
-//        save(invoiceDto, invoiceType);
-//    }
-//
-
     @Override
     public void setPriceTaxAndTotal(InvoiceDto invoiceDto) {
         List<InvoiceProductDto> invoiceProductDtoList = invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
