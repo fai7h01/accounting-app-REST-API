@@ -54,9 +54,10 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
                 .toList();
     }
 
-    @Override// set product and invoice, get product by name and company for sure
+    @Override
     public InvoiceProductDto save(InvoiceProductDto invoiceProductDto) {
         ProductDto product = productService.findByNameInCompany(invoiceProductDto.getProduct().getName());
+        product.setHasInvoiceProduct(true);
         invoiceProductDto.setProduct(product);
         InvoiceProduct saved = invoiceProductRepository.save(mapperUtil.convert(invoiceProductDto, new InvoiceProduct()));
         return mapperUtil.convert(saved, new InvoiceProductDto());

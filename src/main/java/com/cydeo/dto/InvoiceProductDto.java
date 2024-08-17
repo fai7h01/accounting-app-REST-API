@@ -17,10 +17,10 @@ public class InvoiceProductDto {
 
     @JsonIgnore
     private Long id;
+
     @NotNull(message = "Quantity is required field.")
     @Min(value = 1, message = "quantity should be between 1 and 100")
     @Max(value = 100, message = "quantity should be between 1 and 100")
-
     private Integer quantity;
 
     @NotNull(message = "Price is a required field.")
@@ -34,10 +34,13 @@ public class InvoiceProductDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private BigDecimal total;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private BigDecimal profitLoss;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer remainingQuantity;
+
     private InvoiceDto invoice;
   
     @Valid

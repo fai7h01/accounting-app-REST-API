@@ -39,6 +39,6 @@ public class ProductDto {
     @NotNull(message = "Category is a required field.")
     private CategoryDto category;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonIgnore
     private boolean hasInvoiceProduct;
 }

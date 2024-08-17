@@ -1,6 +1,7 @@
 package com.cydeo.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -21,5 +22,7 @@ public class CategoryDto {
     @Column(unique = true, nullable = false)
     private String description;
     private CompanyDto company;
+
+    @JsonIgnore
     private boolean hasProduct;
 }

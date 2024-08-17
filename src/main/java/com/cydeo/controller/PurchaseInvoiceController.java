@@ -86,11 +86,6 @@ public class PurchaseInvoiceController {
                 .message("Product is successfully deleted from invoice.").build());
     }
 
-    @GetMapping("/ip/list")
-    public ResponseEntity<ResponseWrapper> ipList(){
-        return ResponseEntity.ok(ResponseWrapper.builder().data(invoiceProductService.listAllByInvoiceId(1L).get(0)).build());
-    }
-
     @GetMapping("/approve/{id}")
     public ResponseEntity<ResponseWrapper> approvePurchaseInvoice(@PathVariable Long id){
         InvoiceDto foundInvoice = invoiceService.findById(id);
