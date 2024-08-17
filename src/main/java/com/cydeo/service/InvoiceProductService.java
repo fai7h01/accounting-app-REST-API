@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface InvoiceProductService {
 
-
     InvoiceProductDto findById(Long id);
 
     List<InvoiceProductDto> listAllByInvoiceId(Long id);
@@ -21,7 +20,8 @@ public interface InvoiceProductService {
     BigDecimal getInvoiceProductTotalWithoutTax(InvoiceProductDto invoiceProductDto);
 
     void updateQuantityInStockForSale(Long id);
-
+    void updateQuantityInStockForPurchase(Long id);
+    void updateRemainingQuantityUponApproval(Long id);
     void calculateProfitLoss(Long id);
 
     List<InvoiceProductDto> findAllByInvoiceIdAndCalculateTotalPrice(Long invoiceId);

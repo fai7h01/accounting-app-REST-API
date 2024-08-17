@@ -18,7 +18,7 @@ public interface InvoiceService {
     InvoiceDto update(Long id, InvoiceDto invoiceDto);
     void setPriceTaxAndTotal(InvoiceDto invoiceDto);
     InvoiceDto printInvoice(Long id);
-    void approve(InvoiceDto invoiceDto, InvoiceType invoiceType);
+    void approve(Long id);
 //    List<InvoiceDto> listTop3Approved(InvoiceStatus invoiceStatus);
 //
 //    List<InvoiceDto> findByInvoiceTypeAndStatus(InvoiceType type, InvoiceStatus status);

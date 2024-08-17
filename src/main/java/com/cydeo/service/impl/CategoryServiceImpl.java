@@ -89,6 +89,7 @@ public class CategoryServiceImpl implements CategoryService {
         return mapperUtil.convert(saved, new CategoryDto());
     }
 
+    @Override
     public void delete(Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Category not found."));
         if (!category.getProducts().isEmpty()) throw new RuntimeException("Category has products, it can not be deleted.");

@@ -37,9 +37,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
     public InvoiceProductDto findById(Long id) {
-
-        InvoiceProduct foundInvoiceProduct = repository.findById(id).orElseThrow(IllegalArgumentException::new);
-
+        InvoiceProduct foundInvoiceProduct = repository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice Product not found."));
         return mapperUtil.convert(foundInvoiceProduct, new InvoiceProductDto());
     }
 
@@ -57,7 +55,6 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     @Override
     public InvoiceProductDto save(InvoiceProductDto invoiceProductDto) {
         ProductDto product = productService.findByNameInCompany(invoiceProductDto.getProduct().getName());
-        product.setHasInvoiceProduct(true);
         invoiceProductDto.setProduct(product);
         InvoiceProduct saved = invoiceProductRepository.save(mapperUtil.convert(invoiceProductDto, new InvoiceProduct()));
         return mapperUtil.convert(saved, new InvoiceProductDto());
@@ -65,7 +62,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
     public void delete(Long id) {
-        InvoiceProduct invoiceProduct = repository.findById(id).orElseThrow(IllegalArgumentException::new);
+        InvoiceProduct invoiceProduct = repository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice Product not found."));
         invoiceProduct.setIsDeleted(true);
         repository.save(invoiceProduct);
     }
@@ -98,6 +95,24 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     }
 
     @Override
+    public void updateQuantityInStockForPurchase(Long id) {
+        List<Product> products = invoiceProductRepository.findProductsByInvoiceId(id);
+        products.forEach(product -> {
+            product.setQuantityInStock(product.getQuantityInStock() + invoiceProductRepository.sumQuantityOfProducts(id, product.getId()));
+            productService.save(mapperUtil.convert(product, new ProductDto()));
+        });
+    }
+
+    @Override
+    public void updateRemainingQuantityUponApproval(Long id) {
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByInvoiceId(id);
+        invoiceProducts.forEach(invoiceProduct -> {
+            invoiceProduct.setRemainingQuantity(invoiceProduct.getQuantity());
+            invoiceProductRepository.save(invoiceProduct);
+        });
+    }
+
+    @Override
     public void calculateProfitLoss(Long id) {
         List<InvoiceProductDto> invoiceProducts = listAllByInvoiceId(id);
         for (InvoiceProductDto each : invoiceProducts) {
@@ -105,7 +120,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
             BigDecimal profitLoss = getInvoiceProductTotalWithTax(each)
                     .subtract(calculateCost(productId, each.getQuantity()));
             each.setProfitLoss(profitLoss);
-           // save(each);
+            save(each);
         }
     }
 

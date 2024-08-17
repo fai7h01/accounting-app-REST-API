@@ -94,6 +94,21 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceRepository.save(invoice);
     }
 
+    @Override
+    public void approve(Long id) {
+        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice not found."));
+        invoice.setInvoiceStatus(InvoiceStatus.APPROVED);
+        invoice.setDate(LocalDateTime.now());
+        invoiceRepository.save(invoice);
+        if (invoice.getInvoiceType().equals(InvoiceType.PURCHASE)){
+            invoiceProductService.updateQuantityInStockForPurchase(id);
+            invoiceProductService.updateRemainingQuantityUponApproval(id);
+        }else{
+            invoiceProductService.updateQuantityInStockForSale(id);
+            invoiceProductService.calculateProfitLoss(id);
+        }
+    }
+
 //    @Override
 //    public void approve(InvoiceDto invoiceDto, InvoiceType invoiceType) {
 //        invoiceDto.setInvoiceStatus(InvoiceStatus.APPROVED);
@@ -117,37 +132,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 //        save(invoiceDto, invoiceType);
 //    }
 //
-//    @Override
-//    public List<InvoiceDto> listTop3Approved(InvoiceStatus status) {
-//        String title = companyService.getCompanyDtoByLoggedInUser().getTitle();
-//        List<Invoice> top3Approved = invoiceRepository.findTop3ByInvoiceStatusAndCompany_TitleOrderByDateDesc(InvoiceStatus.APPROVED, title);
-//
-//        return top3Approved.stream().map(each -> setPriceTaxAndTotal(mapperUtil.convert(each, new InvoiceDto()))).collect(Collectors.toList());
-//
-//    }
-//
-//    @Override
-//    public BigDecimal countTotal(InvoiceType invoiceType) {
-//        return listAllByTypeAndCompany(invoiceType)
-//                .stream()
-//                .filter(invoiceDto -> invoiceDto.getInvoiceStatus().equals(InvoiceStatus.APPROVED))
-//                .map(InvoiceDto::getTotal)
-//                .reduce(BigDecimal.ZERO, BigDecimal::add);
-//
-//    }
-//
-//    @Override
-//    public BigDecimal sumProfitLoss() {
-//        return invoiceRepository.findApprovedSalesInvoices(1L)
-//                .stream()
-//                .map(invoice -> invoiceProductService.findAllByInvoiceIdAndCalculateTotalPrice(invoice.getId())
-//                        .stream()
-//                        .map(InvoiceProductDto::getProfitLoss).reduce(BigDecimal::add).orElse(BigDecimal.ZERO))
-//                .reduce(BigDecimal.ZERO, BigDecimal::add);
-//
-//    }
-//
-//
+
     @Override
     public void setPriceTaxAndTotal(InvoiceDto invoiceDto) {
         List<InvoiceProductDto> invoiceProductDtoList = invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
@@ -159,28 +144,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceDto.setTotal(totalWithTax);
     }
 
-//
-//    @Override
-//    public List<InvoiceDto> findByInvoiceTypeAndStatus(InvoiceType type, InvoiceStatus status) {
-//        String companyTitle = companyService.getCompanyDtoByLoggedInUser().getTitle();
-//        return invoiceRepository.findByInvoiceTypeAndInvoiceStatusAndCompanyTitleOrderByDateAsc(type, status, companyTitle).stream()
-//                .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto()))
-//                .toList();
-//    }
-//
     @Override
     public InvoiceDto printInvoice(Long id) {
         InvoiceDto dto = findById(id);
         setPriceTaxAndTotal(dto);
         return dto;
-    }
-
-    @Override
-    public void approve(InvoiceDto invoiceDto, InvoiceType invoiceType) {
-        invoiceDto.setInvoiceStatus(InvoiceStatus.APPROVED);
-        invoiceDto.setDate(LocalDateTime.now());
-        List<InvoiceProductDto> invoiceProducts =invoiceProductService.listAllByInvoiceId(invoiceDto.getId());
-        //...
     }
 
 }

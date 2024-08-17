@@ -49,7 +49,6 @@ public class PurchaseInvoiceController {
                 .data(invoiceDto).build());
     }
 
-
     @PutMapping("/update/{id}")
     public ResponseEntity<ResponseWrapper> updatePurchaseInvoice(@PathVariable Long id, @RequestBody InvoiceDto invoice){
         InvoiceDto updatedInvoice = invoiceService.update(id, invoice);
@@ -88,8 +87,7 @@ public class PurchaseInvoiceController {
 
     @GetMapping("/approve/{id}")
     public ResponseEntity<ResponseWrapper> approvePurchaseInvoice(@PathVariable Long id){
-        InvoiceDto foundInvoice = invoiceService.findById(id);
-        invoiceService.approve(foundInvoice, InvoiceType.PURCHASE);
+        invoiceService.approve(id);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)
                 .message("Purchase invoice is successfully approved.").build());
