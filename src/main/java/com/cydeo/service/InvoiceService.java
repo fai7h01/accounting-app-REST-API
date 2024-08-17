@@ -7,6 +7,7 @@ import com.cydeo.enums.InvoiceType;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public interface InvoiceService {
 
@@ -19,6 +20,7 @@ public interface InvoiceService {
     void setPriceTaxAndTotal(InvoiceDto invoiceDto);
     InvoiceDto printInvoice(Long id);
     void approve(Long id);
+    Map<String, BigDecimal> getMonthlyProfitLossMap();
 //    List<InvoiceDto> listTop3Approved(InvoiceStatus invoiceStatus);
 //
 //    List<InvoiceDto> findByInvoiceTypeAndStatus(InvoiceType type, InvoiceStatus status);

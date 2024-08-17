@@ -163,7 +163,11 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
         List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findByInvoiceCompanyIdAndInvoiceInvoiceStatusOrderByInvoiceDateDesc(companyId, InvoiceStatus.APPROVED);
         return invoiceProducts.stream()
-                .map(invoiceProduct -> mapperUtil.convert(invoiceProduct, new InvoiceProductDto()))
+                .map(invoiceProduct -> {
+                    InvoiceProductDto dto = mapperUtil.convert(invoiceProduct, new InvoiceProductDto());
+                    dto.setTotal(getInvoiceProductTotalWithTax(dto));
+                    return dto;
+                })
                 .toList();
     }
 

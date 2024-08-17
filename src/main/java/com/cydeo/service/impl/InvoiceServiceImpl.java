@@ -11,8 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 
 @Service
@@ -125,6 +124,23 @@ public class InvoiceServiceImpl implements InvoiceService {
         InvoiceDto dto = findById(id);
         setPriceTaxAndTotal(dto);
         return dto;
+    }
+
+    @Override
+    public Map<String, BigDecimal> getMonthlyProfitLossMap() {
+        Map<String, BigDecimal> monthlyProfitLoss = new HashMap<>();
+
+        List<Invoice> salesInvoices = invoiceRepository.findApprovedSalesInvoices(companyService.getCompanyDtoByLoggedInUser().getId());
+        List<InvoiceProductDto> salesInvoiceProducts = salesInvoices.stream()
+                .sorted(Comparator.comparing(Invoice::getDate).reversed())
+                .flatMap(invoice -> invoiceProductService.listAllByInvoiceIdAndCalculateTotalPrice(invoice.getId()).stream()).toList();
+
+        for (InvoiceProductDto salesInvoiceProduct : salesInvoiceProducts) {
+            String key = salesInvoiceProduct.getInvoice().getDate().getYear() + " " + salesInvoiceProduct.getInvoice().getDate().getMonth();
+            BigDecimal profitLoss = salesInvoiceProduct.getProfitLoss();
+            monthlyProfitLoss.put(key, monthlyProfitLoss.getOrDefault(key, BigDecimal.ZERO).add(profitLoss));
+        }
+        return monthlyProfitLoss;
     }
 
 }
