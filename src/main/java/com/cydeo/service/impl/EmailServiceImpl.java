@@ -34,6 +34,7 @@ public class EmailServiceImpl implements EmailService {
         helper.setSubject(subject);
         helper.setText(text);
         helper.addAttachment("invoice.pdf", new ByteArrayDataSource(pdfAttachment, "application/pdf"));
+        emailSender.send(message);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class EmailServiceImpl implements EmailService {
         document.add(table);
 
         document.close();
-        return new ByteArrayOutputStream().toByteArray();
+        return os.toByteArray();
     }
 
     private void addRows(PdfPTable table, List<InvoiceProductDto> invoiceProducts) {

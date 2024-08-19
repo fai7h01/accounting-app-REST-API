@@ -27,6 +27,8 @@ public class ClientVendor extends BaseEntity {
 
     private String website;
 
+    private String email;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ClientVendorType clientVendorType;
