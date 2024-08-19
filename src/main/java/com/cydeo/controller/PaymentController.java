@@ -1,7 +1,7 @@
 package com.cydeo.controller;
 
 import com.cydeo.dto.PaymentDto;
-import com.cydeo.dto.common.PaymentRequestDto;
+import com.cydeo.dto.common.PaymentResponse;
 import com.cydeo.dto.common.ResponseWrapper;
 import com.cydeo.service.PaymentService;
 import com.stripe.exception.StripeException;
@@ -37,13 +37,12 @@ public class PaymentController {
     public ResponseEntity<ResponseWrapper> chargeSubscriptionFee(@PathVariable Long id) throws StripeException {
         try {
             PaymentIntent paymentIntent = paymentService.createPaymentIntent(25000L, id);
-            Map<String, String> responseData = new HashMap<>();
-            responseData.put("clientSecret", paymentIntent.getClientSecret());
-            responseData.put("description", paymentIntent.getDescription());
+            PaymentResponse paymentResponse = PaymentResponse.builder().clientSecret(paymentIntent.getClientSecret())
+                    .description(paymentIntent.getDescription()).build();
             return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                     .success(true)
                     .message("Subscription fee is paid successfully.")
-                    .data(responseData).build());
+                    .data(paymentResponse).build());
         }catch (StripeException e){
             return ResponseEntity.badRequest().body(null);
         }
