@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -87,14 +88,13 @@ public class PaymentServiceImpl implements PaymentService {
                 PaymentIntentCreateParams.builder()
                         .setAmount(amount)
                         .setCurrency(Currency.USD.name())
-                        .setDescription("Cydeo accounting subscription fee for : " + payment.getYear() + " " + payment.getMonth().getValue())
+                        .setDescription("Accounting subscription fee for : " + payment.getYear() + " " + payment.getMonth().getValue())
                         .build();
 
         payment.setPaid(true);
+        payment.setPaymentDate(LocalDate.now());
         paymentRepository.save(payment);
-
         return PaymentIntent.create(params);
     }
-
 
 }
