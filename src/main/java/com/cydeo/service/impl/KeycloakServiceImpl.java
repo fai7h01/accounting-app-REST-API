@@ -2,6 +2,7 @@ package com.cydeo.service.impl;
 
 import com.cydeo.config.KeycloakProperties;
 import com.cydeo.dto.UserDto;
+import com.cydeo.exception.UserDoesNotExistsException;
 import com.cydeo.service.KeycloakService;
 import com.cydeo.service.UserService;
 import org.keycloak.adapters.springsecurity.account.SimpleKeycloakAccount;

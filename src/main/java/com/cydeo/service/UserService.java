@@ -1,6 +1,9 @@
 package com.cydeo.service;
 
 import com.cydeo.dto.UserDto;
+import com.cydeo.exception.UserAlreadyExistsException;
+import com.cydeo.exception.UserDoesNotExistsException;
+import com.cydeo.exception.UserNotFoundException;
 
 import java.util.List;
 
