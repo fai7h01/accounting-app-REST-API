@@ -20,8 +20,8 @@ public class UserController {
     private final UserService userService;
 
     @ExecutionTime
-    @GetMapping("/list")
     @RolesAllowed({"Root User", "Admin"})
+    @GetMapping("/list")
     public ResponseEntity<ResponseWrapper> listAllUser(){
         List<UserDto> users = userService.getAllUsers();
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
@@ -30,6 +30,7 @@ public class UserController {
                 .data(users).build());
     }
 
+    @RolesAllowed({"Root User"})
     @PostMapping
     public ResponseEntity<ResponseWrapper> createUser(@RequestBody UserDto user){
         UserDto userDto = userService.save(user);
@@ -40,6 +41,7 @@ public class UserController {
                 .data(userDto).build());
     }
 
+    @RolesAllowed({"Root User"})
     @PutMapping("/update/{id}")
     public ResponseEntity<ResponseWrapper> updateUser(@PathVariable Long id, @RequestBody UserDto user){
         UserDto userDto = userService.update(id, user);
@@ -49,6 +51,7 @@ public class UserController {
                 .data(userDto).build());
     }
 
+    @RolesAllowed({"Root User"})
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ResponseWrapper> deleteUserById(@PathVariable Long id){
         userService.delete(id);
