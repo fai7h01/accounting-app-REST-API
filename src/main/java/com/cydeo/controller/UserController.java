@@ -1,5 +1,6 @@
 package com.cydeo.controller;
 
+import com.cydeo.annotation.ExecutionTime;
 import com.cydeo.dto.UserDto;
 import com.cydeo.dto.common.ResponseWrapper;
 import com.cydeo.service.UserService;
@@ -18,6 +19,7 @@ public class UserController {
 
     private final UserService userService;
 
+    @ExecutionTime
     @GetMapping("/list")
     @RolesAllowed({"Root User", "Admin"})
     public ResponseEntity<ResponseWrapper> listAllUser(){

@@ -1,5 +1,6 @@
 package com.cydeo.controller;
 
+import com.cydeo.annotation.ExecutionTime;
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.dto.common.ResponseWrapper;
@@ -85,6 +86,7 @@ public class PurchaseInvoiceController {
                 .message("Product is successfully deleted from invoice.").build());
     }
 
+    @ExecutionTime
     @GetMapping("/approve/{id}")
     public ResponseEntity<ResponseWrapper> approvePurchaseInvoice(@PathVariable Long id){
         invoiceService.approve(id);
