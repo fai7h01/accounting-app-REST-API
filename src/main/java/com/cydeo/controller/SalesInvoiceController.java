@@ -90,6 +90,7 @@ public class SalesInvoiceController {
     @GetMapping("/approve/{id}")
     public ResponseEntity<ResponseWrapper> approveSalesInvoice(@PathVariable Long id){
         invoiceService.approve(id);
+        invoiceProductService.lowQuantityAlert(id);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
                 .success(true)
                 .message("Purchase invoice is successfully approved.").build());

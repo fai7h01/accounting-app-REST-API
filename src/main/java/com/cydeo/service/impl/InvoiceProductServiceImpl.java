@@ -5,6 +5,7 @@ import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.entity.Product;
 import com.cydeo.enums.InvoiceStatus;
+import com.cydeo.exception.ProductLowLimitAlertException;
 import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.service.CompanyService;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -25,14 +27,12 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     private final MapperUtil mapperUtil;
     private final ProductService productService;
     private final CompanyService companyService;
-    private final InvoiceRepository invoiceRepository;
 
-    public InvoiceProductServiceImpl(InvoiceProductRepository repository, MapperUtil mapperUtil, ProductService productService, CompanyService companyService, InvoiceRepository invoiceRepository) {
+    public InvoiceProductServiceImpl(InvoiceProductRepository repository, MapperUtil mapperUtil, ProductService productService, CompanyService companyService) {
         this.invoiceProductRepository = repository;
         this.mapperUtil = mapperUtil;
         this.productService = productService;
         this.companyService = companyService;
-        this.invoiceRepository = invoiceRepository;
     }
 
 
@@ -121,6 +121,19 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
             each.setProfitLoss(profitLoss);
             save(each);
         }
+    }
+
+    @Override
+    public void lowQuantityAlert(Long id) {
+        List<Product> products = invoiceProductRepository.findProductsByInvoiceId(id);
+        for (Product each : products) {
+            int stock = each.getQuantityInStock();
+            if (stock < each.getLowLimitAlert()){
+                throw new ProductLowLimitAlertException("Stock of " + each.getName() + " decreased below low limit!");
+            }
+        }
+
+
     }
 
     private BigDecimal calculateCost(Long productId, Integer salesQuantity) {

@@ -20,9 +20,14 @@ public interface InvoiceProductService {
     BigDecimal getInvoiceProductTotalWithoutTax(InvoiceProductDto invoiceProductDto);
 
     void updateQuantityInStockForSale(Long id);
+
     void updateQuantityInStockForPurchase(Long id);
+
     void updateRemainingQuantityUponApproval(Long id);
+
     void calculateProfitLoss(Long id);
+
+    void lowQuantityAlert(Long id);
 
     List<InvoiceProductDto> listAllByInvoiceIdAndCalculateTotalPrice(Long invoiceId);
 
