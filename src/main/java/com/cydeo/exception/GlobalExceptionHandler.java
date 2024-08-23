@@ -73,4 +73,12 @@ public class GlobalExceptionHandler {
         ExceptionWrapper exceptionWrapper = new ExceptionWrapper(HttpStatus.CONFLICT.value(), message, request.getRequestURI());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionWrapper);
     }
+
+    @ExceptionHandler(CompanyNotFoundException.class)
+    public ResponseEntity<ExceptionWrapper> companyNotFoundExceptionHandler(CompanyNotFoundException exception, HttpServletRequest request){
+        exception.printStackTrace();
+        String message = exception.getMessage();
+        ExceptionWrapper exceptionWrapper = new ExceptionWrapper(HttpStatus.NOT_FOUND.value(), message, request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionWrapper);
+    }
 }

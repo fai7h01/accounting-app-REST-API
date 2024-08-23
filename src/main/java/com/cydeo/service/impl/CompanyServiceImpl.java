@@ -4,6 +4,7 @@ import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.Company;
 import com.cydeo.enums.CompanyStatus;
+import com.cydeo.exception.CompanyNotFoundException;
 import com.cydeo.repository.CompanyRepository;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.KeycloakService;
@@ -29,7 +30,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyDto findById(Long id) {
-        Company company = companyRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Company company = companyRepository.findById(id).orElseThrow(() -> new CompanyNotFoundException("Company not found."));
         return mapperUtil.convert(company, new CompanyDto());
     }
 
@@ -37,7 +38,6 @@ public class CompanyServiceImpl implements CompanyService {
     public CompanyDto findByTitle(String title) {
         return mapperUtil.convert(companyRepository.findByTitle(title), new CompanyDto());
     }
-
 
     @Override
     public List<CompanyDto> findAllAndSorted() {
@@ -57,7 +57,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyDto update(Long id, CompanyDto companyDto) {
-        Company foundCompany = companyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Company not found."));
+        Company foundCompany = companyRepository.findById(id).orElseThrow(() -> new CompanyNotFoundException("Company not found."));
         companyDto.setId(foundCompany.getId());
         companyDto.getAddress().setId(foundCompany.getAddress().getId());
         Company convertedCompany = mapperUtil.convert(companyDto, new Company());
@@ -67,14 +67,14 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void activate(Long id) {
-        Company company = companyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Company not found."));
+        Company company = companyRepository.findById(id).orElseThrow(() -> new CompanyNotFoundException("Company not found."));
         company.setCompanyStatus(CompanyStatus.ACTIVE);
         companyRepository.save(company);
     }
 
     @Override
     public void deactivate(Long id) {
-        Company company = companyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Company not found."));
+        Company company = companyRepository.findById(id).orElseThrow(() -> new CompanyNotFoundException("Company not found."));
         company.setCompanyStatus(CompanyStatus.PASSIVE);
         companyRepository.save(company);
     }
