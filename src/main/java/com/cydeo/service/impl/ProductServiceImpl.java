@@ -4,18 +4,16 @@ import com.cydeo.dto.CategoryDto;
 import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.Category;
 import com.cydeo.entity.Product;
+import com.cydeo.exception.ProductNotFoundException;
 import com.cydeo.repository.ProductRepository;
 import com.cydeo.service.CategoryService;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.ProductService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -34,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto findById(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Product not found."));
+        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found."));
         return mapperUtil.convert(product, new ProductDto());
     }
 
@@ -65,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void delete(Long id) {
-        Product foundProduct = productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Product not found."));
+        Product foundProduct = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found."));
         foundProduct.setIsDeleted(true);
         foundProduct.setName(foundProduct.getName() + "-" + foundProduct.getId());
         productRepository.save(foundProduct);
@@ -74,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto findByNameInCompany(String name) {
         Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
-        Product product = productRepository.findByNameAndCategoryCompanyId(name, companyId).orElseThrow(() -> new NoSuchElementException("Product not found."));
+        Product product = productRepository.findByNameAndCategoryCompanyId(name, companyId).orElseThrow(() -> new ProductNotFoundException("Product not found."));
         return mapperUtil.convert(product, new ProductDto());
     }
 

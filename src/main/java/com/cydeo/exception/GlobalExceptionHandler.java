@@ -34,6 +34,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionWrapper);
     }
 
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ExceptionWrapper> productNotFoundExceptionHandler(ProductNotFoundException exception, HttpServletRequest request){
+        exception.printStackTrace();
+        String message = exception.getMessage();
+        ExceptionWrapper exceptionWrapper = new ExceptionWrapper(HttpStatus.NOT_FOUND.value(), message, request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionWrapper);
+    }
+
     @ExceptionHandler(ProductLowLimitAlertException.class)
     public ResponseEntity<ExceptionWrapper> productLowLimitAlertExceptionHandler(ProductLowLimitAlertException exception, HttpServletRequest request){
         exception.printStackTrace();
