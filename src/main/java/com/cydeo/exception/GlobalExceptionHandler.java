@@ -50,4 +50,27 @@ public class GlobalExceptionHandler {
         return ResponseEntity.ok(exceptionWrapper);
     }
 
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ExceptionWrapper> categoryNotFoundExceptionHandler(CategoryNotFoundException exception, HttpServletRequest request){
+        exception.printStackTrace();
+        String message = exception.getMessage();
+        ExceptionWrapper exceptionWrapper = new ExceptionWrapper(HttpStatus.NOT_FOUND.value(), message, request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionWrapper);
+    }
+
+    @ExceptionHandler(CategoryAlreadyExistsException.class)
+    public ResponseEntity<ExceptionWrapper> categoryAlreadyExistsExceptionHandler(CategoryAlreadyExistsException exception, HttpServletRequest request){
+        exception.printStackTrace();
+        String message = exception.getMessage();
+        ExceptionWrapper exceptionWrapper = new ExceptionWrapper(HttpStatus.CONFLICT.value(), message, request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionWrapper);
+    }
+
+    @ExceptionHandler(CategoryCantBeDeletedException.class)
+    public ResponseEntity<ExceptionWrapper> categoryCantBeDeletedExceptionHandler(CategoryCantBeDeletedException exception, HttpServletRequest request){
+        exception.printStackTrace();
+        String message = exception.getMessage();
+        ExceptionWrapper exceptionWrapper = new ExceptionWrapper(HttpStatus.CONFLICT.value(), message, request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionWrapper);
+    }
 }

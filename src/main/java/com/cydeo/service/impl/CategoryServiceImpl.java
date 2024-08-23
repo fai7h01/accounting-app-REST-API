@@ -5,6 +5,9 @@ import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.Category;
 import com.cydeo.entity.Company;
+import com.cydeo.exception.CategoryAlreadyExistsException;
+import com.cydeo.exception.CategoryCantBeDeletedException;
+import com.cydeo.exception.CategoryNotFoundException;
 import com.cydeo.repository.CategoryRepository;
 import com.cydeo.service.CategoryService;
 import com.cydeo.service.CompanyService;
@@ -45,7 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto findByDescription(String desc) {
         Long companyId = companyService.getCompanyDtoByLoggedInUser().getId();
-        Category category = categoryRepository.findByDescriptionAndCompanyId(desc, companyId).orElseThrow(() -> new NoSuchElementException("Category not found"));
+        Category category = categoryRepository.findByDescriptionAndCompanyId(desc, companyId).orElseThrow(() -> new CategoryNotFoundException("Category not found."));
         return mapperUtil.convert(category, new CategoryDto());
     }
 
@@ -65,7 +68,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto save(CategoryDto dto) {
         if (categoryAlreadyExists(dto)){
-            throw new RuntimeException("Category already exists.");
+            throw new CategoryAlreadyExistsException("Category already exists.");
         }
         CompanyDto logged = companyService.getCompanyDtoByLoggedInUser();
         dto.setCompany(logged);
@@ -81,7 +84,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto update(Long id, CategoryDto dto) {
-        Category foundCategory = categoryRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Category not found."));
+        Category foundCategory = categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException("Category not found."));
         Category converted = mapperUtil.convert(dto, new Category());
         converted.setId(foundCategory.getId());
         converted.setCompany(foundCategory.getCompany());
@@ -91,8 +94,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void delete(Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Category not found."));
-        if (!category.getProducts().isEmpty()) throw new RuntimeException("Category has products, it can not be deleted.");
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException("Category not found."));
+        if (!category.getProducts().isEmpty()) throw new CategoryCantBeDeletedException("Category has products, it can not be deleted.");
         categoryRepository.delete(category);
     }
 
