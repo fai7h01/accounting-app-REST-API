@@ -132,8 +132,6 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
                 throw new ProductLowLimitAlertException("Stock of " + each.getName() + " decreased below low limit!");
             }
         }
-
-
     }
 
     private BigDecimal calculateCost(Long productId, Integer salesQuantity) {

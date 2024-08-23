@@ -18,4 +18,20 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionWrapper);
     }
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ExceptionWrapper> userAlreadyExistsException(UserAlreadyExistsException exception, HttpServletRequest request){
+        exception.printStackTrace();
+        String message = exception.getMessage();
+        ExceptionWrapper exceptionWrapper = new ExceptionWrapper(HttpStatus.CONFLICT.value(), message, request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionWrapper);
+    }
+
+    @ExceptionHandler(ProductLowLimitAlertException.class)
+    public ResponseEntity<ExceptionWrapper> productLowLimitAlertException(ProductLowLimitAlertException exception, HttpServletRequest request){
+        exception.printStackTrace();
+        String message = exception.getMessage();
+        ExceptionWrapper exceptionWrapper = new ExceptionWrapper(HttpStatus.OK.value(), message, request.getRequestURI());
+        return ResponseEntity.ok(exceptionWrapper);
+    }
+
 }
