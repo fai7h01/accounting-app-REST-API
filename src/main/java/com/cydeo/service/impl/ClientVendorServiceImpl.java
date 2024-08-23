@@ -3,12 +3,12 @@ package com.cydeo.service.impl;
 import com.cydeo.dto.ClientVendorDto;
 import com.cydeo.dto.CompanyDto;
 import com.cydeo.entity.ClientVendor;
+import com.cydeo.exception.ClientVendorNotFoundException;
 import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.service.*;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -23,7 +23,6 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         this.mapperUtil = mapperUtil;
         this.companyService = companyService;
     }
-
 
     @Override
     public List<ClientVendorDto> listAllClientVendorsForLoggedInCompany() {
@@ -42,7 +41,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     @Override
     public ClientVendorDto update(Long id, ClientVendorDto clientVendorDto) {
-        ClientVendor clientVendor = clientVendorRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Client/Vendor not found."));
+        ClientVendor clientVendor = clientVendorRepository.findById(id).orElseThrow(() -> new ClientVendorNotFoundException("Client/Vendor not found."));
         clientVendorDto.setId(clientVendor.getId());
         clientVendorDto.setCompany(getLoggedInCompany());
         clientVendorDto.getAddress().setId(clientVendor.getAddress().getId());
@@ -57,12 +56,12 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         if (clientVendor.isPresent()){
             return mapperUtil.convert(clientVendor.get(), new ClientVendorDto());
         }
-        throw new NoSuchElementException("Client/Vendor not found.");
+        throw new ClientVendorNotFoundException("Client/Vendor not found.");
     }
 
     @Override
     public void delete(Long id) {
-        ClientVendor clientVendor = clientVendorRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Client/Vendor with id: " + id + " not found."));
+        ClientVendor clientVendor = clientVendorRepository.findById(id).orElseThrow(() -> new ClientVendorNotFoundException("Client/Vendor not found."));
         clientVendor.setIsDeleted(true);
         clientVendorRepository.save(clientVendor);
     }
