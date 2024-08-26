@@ -2,7 +2,7 @@ package com.cydeo.controller;
 
 import com.cydeo.annotation.ExecutionTime;
 import com.cydeo.dto.UserDto;
-import com.cydeo.dto.common.ResponseWrapper;
+import com.cydeo.dto.common.response.ResponseWrapper;
 import com.cydeo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

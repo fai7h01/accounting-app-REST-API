@@ -2,7 +2,7 @@ package com.cydeo.controller;
 
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
-import com.cydeo.dto.common.ResponseWrapper;
+import com.cydeo.dto.common.response.ResponseWrapper;
 import com.cydeo.service.EmailService;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;

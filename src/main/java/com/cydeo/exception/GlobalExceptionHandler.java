@@ -1,19 +1,25 @@
 package com.cydeo.exception;
 
 import com.cydeo.annotation.DefaultExceptionMessage;
-import com.cydeo.dto.common.DefaultExceptionMessageDto;
-import com.cydeo.dto.common.ExceptionWrapper;
+import com.cydeo.dto.common.response.DefaultExceptionMessageDto;
+import com.cydeo.dto.common.response.ExceptionWrapper;
+import com.cydeo.dto.common.response.ValidationExceptionWrapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.util.ObjectUtils;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.HandlerMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestControllerAdvice
@@ -52,6 +58,39 @@ public class GlobalExceptionHandler {
             return Optional.of(defaultExceptionMessageDto);
         }
         return Optional.empty();
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ExceptionWrapper> handleValidationException(MethodArgumentNotValidException exception, HttpServletRequest request){
+
+        exception.printStackTrace();
+
+        String message = "Invalid input(s)";
+
+        ExceptionWrapper exceptionWrapper = ExceptionWrapper.builder().code(HttpStatus.BAD_REQUEST.value()).message(message).path(request.getRequestURI()).build();
+
+        List<ValidationExceptionWrapper> validationExceptions = getValidationExceptionWrappers(exception);
+
+        exceptionWrapper.setValidationExceptionList(validationExceptions);
+        exceptionWrapper.setErrorCount(validationExceptions.size());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionWrapper);
+    }
+
+    private static List<ValidationExceptionWrapper> getValidationExceptionWrappers(MethodArgumentNotValidException exception) {
+        List<ValidationExceptionWrapper> validationExceptions = new ArrayList<>();
+
+        for (ObjectError error : exception.getBindingResult().getAllErrors()) {
+
+            String errorField = ((FieldError) error).getField();
+            Object rejectedValue = ((FieldError) error).getRejectedValue();
+            String reason = error.getDefaultMessage();
+
+            ValidationExceptionWrapper validationException = new ValidationExceptionWrapper(errorField, rejectedValue, reason);
+
+            validationExceptions.add(validationException);
+        }
+        return validationExceptions;
     }
 
 //    @ExceptionHandler(UserNotFoundException.class)

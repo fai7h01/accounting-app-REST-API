@@ -1,12 +1,12 @@
-package com.cydeo.dto.common;
+package com.cydeo.dto.common.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,5 +19,8 @@ public class ExceptionWrapper {
     private Integer code;
     private String message;
     private String path;
+
+    private int errorCount;
+    private List<ValidationExceptionWrapper> validationExceptionList;
 
 }

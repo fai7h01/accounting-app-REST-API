@@ -1,8 +1,7 @@
-package com.cydeo.dto.common;
+package com.cydeo.dto.common.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter

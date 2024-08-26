@@ -1,4 +1,4 @@
-package com.cydeo.dto.common;
+package com.cydeo.dto.common.response;
 
 import lombok.Builder;
 import lombok.Getter;

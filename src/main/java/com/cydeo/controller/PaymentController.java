@@ -1,8 +1,8 @@
 package com.cydeo.controller;
 
 import com.cydeo.dto.PaymentDto;
-import com.cydeo.dto.common.PaymentResponse;
-import com.cydeo.dto.common.ResponseWrapper;
+import com.cydeo.dto.common.response.PaymentResponse;
+import com.cydeo.dto.common.response.ResponseWrapper;
 import com.cydeo.service.PaymentService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
@@ -12,9 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/payment")

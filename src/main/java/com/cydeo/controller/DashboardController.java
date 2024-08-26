@@ -2,7 +2,7 @@ package com.cydeo.controller;
 
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.common.CurrencyDto;
-import com.cydeo.dto.common.ResponseWrapper;
+import com.cydeo.dto.common.response.ResponseWrapper;
 import com.cydeo.service.DashboardService;
 import com.cydeo.service.InvoiceService;
 import lombok.RequiredArgsConstructor;

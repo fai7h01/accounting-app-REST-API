@@ -19,9 +19,7 @@ public class UserDto {
     private Long id;
 
     @NotBlank(message = "Email is required field.")
-    @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9-]+(.[A-Za-z0-9-]+)@[^-][A-Za-z0-9-]+(.[A-Za-z0-9-]+)(.[A-Za-z]{2,})$", message = "Invalid email format.")
     private String username;
-
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank(message = "Password is required field.")
@@ -55,17 +53,7 @@ public class UserDto {
     @NotNull(message = "Please select a Company.")
     private CompanyDto company;
 
-
     @JsonIgnore
     private boolean isOnlyAdmin;
-
-
-    public String getCompanyName() {
-        return company != null ? company.getTitle() : "";
-    }
-
-    public String getRoleDescription() {
-        return role != null ? role.getDescription() : "";
-    }
 
 }

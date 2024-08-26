@@ -1,7 +1,7 @@
 package com.cydeo.controller;
 
 import com.cydeo.dto.ProductDto;
-import com.cydeo.dto.common.ResponseWrapper;
+import com.cydeo.dto.common.response.ResponseWrapper;
 import com.cydeo.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
