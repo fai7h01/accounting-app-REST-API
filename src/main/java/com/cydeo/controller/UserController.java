@@ -33,7 +33,7 @@ public class UserController {
 
     @RolesAllowed({"Root User"})
     @PostMapping
-    public ResponseEntity<ResponseWrapper> createUser(@RequestBody @Valid UserDto user){
+    public ResponseEntity<ResponseWrapper> createUser(@RequestBody UserDto user){ //@valid
         UserDto userDto = userService.save(user);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseWrapper.builder().code(HttpStatus.CREATED.value())
