@@ -4,6 +4,7 @@ import com.cydeo.dto.*;
 import com.cydeo.entity.Invoice;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
+import com.cydeo.exception.InvoiceNotFoundException;
 import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.service.*;
 import com.cydeo.util.MapperUtil;
@@ -42,7 +43,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoiceDto findById(Long id) {
-        Invoice foundInvoice = invoiceRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice " + id + " not found"));
+        Invoice foundInvoice = invoiceRepository.findById(id).orElseThrow(() -> new InvoiceNotFoundException("Invoice not found."));
         return mapperUtil.convert(foundInvoice, new InvoiceDto());
     }
 
@@ -76,7 +77,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDto update(Long id, InvoiceDto invoiceDto) {
         ClientVendorDto clientVendor = clientVendorService.findByName(invoiceDto.getClientVendor().getClientVendorName());
-        Invoice foundInvoice = invoiceRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice not found."));
+        Invoice foundInvoice = invoiceRepository.findById(id).orElseThrow(() -> new InvoiceNotFoundException("Invoice not found."));
         InvoiceDto invoiceInDB = mapperUtil.convert(foundInvoice, new InvoiceDto());
         invoiceInDB.setClientVendor(clientVendor);
         Invoice saved = invoiceRepository.save(mapperUtil.convert(invoiceInDB, new Invoice()));
@@ -86,7 +87,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void delete(Long id) {
-        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice not found."));
+        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new InvoiceNotFoundException("Invoice not found."));
         invoice.setIsDeleted(true);
         List<InvoiceProductDto> invoiceProducts = invoiceProductService.listAllByInvoiceId(invoice.getId());
         invoiceProducts.forEach(ip -> invoiceProductService.delete(ip.getId()));
@@ -95,7 +96,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void approve(Long id) {
-        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice not found."));
+        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new InvoiceNotFoundException("Invoice not found."));
         invoice.setInvoiceStatus(InvoiceStatus.APPROVED);
         invoice.setDate(LocalDateTime.now());
         invoiceRepository.save(invoice);

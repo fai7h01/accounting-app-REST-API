@@ -6,6 +6,7 @@ import com.cydeo.entity.Company;
 import com.cydeo.entity.Payment;
 import com.cydeo.enums.Currency;
 import com.cydeo.enums.Months;
+import com.cydeo.exception.PaymentNotFoundException;
 import com.cydeo.repository.PaymentRepository;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.PaymentService;
@@ -62,7 +63,7 @@ public class PaymentServiceImpl implements PaymentService {
         if (foundPayment.isPresent()) {
             return mapperUtil.convert(foundPayment.get(), new PaymentDto());
         }
-        throw new NoSuchElementException("Payment not found");
+        throw new PaymentNotFoundException("Payment not found.");
     }
 
     @Override
@@ -82,7 +83,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public PaymentIntent createPaymentIntent(Long amount, Long id) throws StripeException {
 
-        Payment payment = paymentRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Payment not found"));
+        Payment payment = paymentRepository.findById(id).orElseThrow(() -> new PaymentNotFoundException("Payment not found."));
 
         PaymentIntentCreateParams params =
                 PaymentIntentCreateParams.builder()

@@ -19,7 +19,6 @@ import java.util.Optional;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ExceptionWrapper> accessDeniedException(AccessDeniedException se){
         String message = se.getMessage();
