@@ -20,9 +20,9 @@ import java.util.Optional;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ExceptionWrapper> accessDeniedException(AccessDeniedException se){
-        String message = se.getMessage();
-        return new ResponseEntity<>(ExceptionWrapper.builder().success(false).code(HttpStatus.FORBIDDEN.value()).message(message).build(),HttpStatus.FORBIDDEN);
+    public ResponseEntity<ExceptionWrapper> accessDeniedException(AccessDeniedException e, HttpServletRequest request){
+        String message = e.getMessage();
+        return new ResponseEntity<>(ExceptionWrapper.builder().success(false).code(HttpStatus.FORBIDDEN.value()).message(message).path(request.getRequestURI()).build(),HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class, BadCredentialsException.class})

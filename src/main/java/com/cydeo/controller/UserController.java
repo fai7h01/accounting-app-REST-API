@@ -1,6 +1,5 @@
 package com.cydeo.controller;
 
-import com.cydeo.annotation.DefaultExceptionMessage;
 import com.cydeo.annotation.ExecutionTime;
 import com.cydeo.dto.UserDto;
 import com.cydeo.dto.common.ResponseWrapper;
@@ -42,7 +41,7 @@ public class UserController {
                 .data(userDto).build());
     }
 
-    //@RolesAllowed({"Root User"})
+    @RolesAllowed({"Root User"})
     @PutMapping("/update/{id}")
     public ResponseEntity<ResponseWrapper> updateUser(@PathVariable Long id, @RequestBody UserDto user){
         UserDto userDto = userService.update(id, user);
