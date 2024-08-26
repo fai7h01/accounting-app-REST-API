@@ -5,6 +5,7 @@ import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.entity.Product;
 import com.cydeo.enums.InvoiceStatus;
+import com.cydeo.exception.InvoiceProductNotFoundException;
 import com.cydeo.exception.ProductLowLimitAlertException;
 import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.repository.InvoiceRepository;
@@ -38,7 +39,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
     public InvoiceProductDto findById(Long id) {
-        InvoiceProduct foundInvoiceProduct = invoiceProductRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice Product not found."));
+        InvoiceProduct foundInvoiceProduct = invoiceProductRepository.findById(id).orElseThrow(() -> new InvoiceProductNotFoundException("Invoice product not found."));
         return mapperUtil.convert(foundInvoiceProduct, new InvoiceProductDto());
     }
 
@@ -63,7 +64,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
     public void delete(Long id) {
-        InvoiceProduct invoiceProduct = invoiceProductRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Invoice Product not found."));
+        InvoiceProduct invoiceProduct = invoiceProductRepository.findById(id).orElseThrow(() -> new InvoiceProductNotFoundException("Invoice product not found."));
         invoiceProduct.setIsDeleted(true);
         invoiceProductRepository.save(invoiceProduct);
     }
