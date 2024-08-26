@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ExceptionWrapper.builder().success(false).code(HttpStatus.FORBIDDEN.value()).message(message).path(request.getRequestURI()).build(),HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class, BadCredentialsException.class})
+    @ExceptionHandler({Throwable.class, Exception.class, RuntimeException.class, BadCredentialsException.class})
     public ResponseEntity<ExceptionWrapper> genericException(Throwable e, HandlerMethod handlerMethod, HttpServletRequest request) {
 
         Optional<DefaultExceptionMessageDto> defaultMessage = getMessageFromAnnotation(handlerMethod.getMethod());
