@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -32,7 +33,7 @@ public class UserController {
 
     @RolesAllowed({"Root User"})
     @PostMapping
-    public ResponseEntity<ResponseWrapper> createUser(@RequestBody UserDto user){
+    public ResponseEntity<ResponseWrapper> createUser(@RequestBody @Valid UserDto user){
         UserDto userDto = userService.save(user);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseWrapper.builder().code(HttpStatus.CREATED.value())
@@ -41,7 +42,7 @@ public class UserController {
                 .data(userDto).build());
     }
 
-    @RolesAllowed({"Root User"})
+    //@RolesAllowed({"Root User"})
     @PutMapping("/update/{id}")
     public ResponseEntity<ResponseWrapper> updateUser(@PathVariable Long id, @RequestBody UserDto user){
         UserDto userDto = userService.update(id, user);

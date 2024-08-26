@@ -1,5 +1,6 @@
 package com.cydeo.controller;
 
+import com.cydeo.annotation.DefaultExceptionMessage;
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.dto.common.response.ResponseWrapper;
@@ -30,6 +31,7 @@ public class EmailController {
     private final InvoiceService invoiceService;
     private final InvoiceProductService invoiceProductService;
 
+    @DefaultExceptionMessage(defaultMessage = "Something went wrong while sending email.")
     @GetMapping("/send-email/{id}")
     public ResponseEntity<ResponseWrapper> sendEmail(@PathVariable("id") Long invoiceId){
         InvoiceDto invoice = invoiceService.findById(invoiceId);

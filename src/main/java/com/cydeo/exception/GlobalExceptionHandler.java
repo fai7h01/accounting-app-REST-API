@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionWrapper> genericException(Throwable e, HandlerMethod handlerMethod, HttpServletRequest request) {
 
         Optional<DefaultExceptionMessageDto> defaultMessage = getMessageFromAnnotation(handlerMethod.getMethod());
-        if (defaultMessage.isPresent() && !ObjectUtils.isEmpty(defaultMessage.get().getMessage()) && e.getMessage().isEmpty()) {
+        if (defaultMessage.isPresent() && !ObjectUtils.isEmpty(defaultMessage.get().getMessage())) {
             ExceptionWrapper response = ExceptionWrapper
                     .builder()
                     .success(false)
@@ -46,7 +46,6 @@ public class GlobalExceptionHandler {
         }
         return new ResponseEntity<>(ExceptionWrapper.builder().success(false).message(e.getMessage()).code(HttpStatus.INTERNAL_SERVER_ERROR.value()).path(request.getRequestURI()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
 
     private Optional<DefaultExceptionMessageDto> getMessageFromAnnotation(Method method) {
         DefaultExceptionMessage defaultExceptionMessage = method.getAnnotation(DefaultExceptionMessage.class);
