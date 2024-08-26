@@ -5,6 +5,7 @@ import com.cydeo.dto.common.DefaultExceptionMessageDto;
 import com.cydeo.dto.common.ExceptionWrapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,15 +16,21 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ExceptionWrapper> accessDeniedException(AccessDeniedException se){
+        String message = se.getMessage();
+        return new ResponseEntity<>(ExceptionWrapper.builder().success(false).code(HttpStatus.FORBIDDEN.value()).message(message).build(),HttpStatus.FORBIDDEN);
+    }
 
     @ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class, BadCredentialsException.class})
     public ResponseEntity<ExceptionWrapper> genericException(Throwable e, HandlerMethod handlerMethod, HttpServletRequest request) {
 
         Optional<DefaultExceptionMessageDto> defaultMessage = getMessageFromAnnotation(handlerMethod.getMethod());
-        if (defaultMessage.isPresent() && !ObjectUtils.isEmpty(defaultMessage.get().getMessage())) {
+        if (defaultMessage.isPresent() && !ObjectUtils.isEmpty(defaultMessage.get().getMessage()) && e.getMessage().isEmpty()) {
             ExceptionWrapper response = ExceptionWrapper
                     .builder()
                     .success(false)

@@ -1,5 +1,6 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.annotation.DefaultExceptionMessage;
 import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.User;
