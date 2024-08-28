@@ -31,6 +31,7 @@ public class CategoryController {
     }
 
     @PostMapping
+    @Operation(summary = "Create category")
     public ResponseEntity<ResponseWrapper> createCategory(@RequestBody CategoryDto category){
         CategoryDto categoryDto = categoryService.save(category);
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.builder()
@@ -41,6 +42,7 @@ public class CategoryController {
     }
 
     @PutMapping("/update/{id}")
+    @Operation(summary = "Update category")
     public ResponseEntity<ResponseWrapper> updateCategory(@PathVariable Long id, @RequestBody CategoryDto category){
         CategoryDto updated = categoryService.update(id, category);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
@@ -50,6 +52,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete category")
     public ResponseEntity<ResponseWrapper> deleteCategory(@PathVariable Long id){
         categoryService.delete(id);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())

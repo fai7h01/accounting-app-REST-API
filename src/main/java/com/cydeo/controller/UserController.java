@@ -25,7 +25,7 @@ public class UserController {
     @ExecutionTime
     @RolesAllowed({"Root User", "Admin"})
     @GetMapping("/list")
-    @Operation(summary = "List all users")
+    @Operation(summary = "List all users by logged in user")
     public ResponseEntity<ResponseWrapper> listAllUser(){
         List<UserDto> users = userService.getAllByLoggedInUser();
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
