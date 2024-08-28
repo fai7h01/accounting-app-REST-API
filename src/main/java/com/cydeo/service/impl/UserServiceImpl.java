@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -81,6 +82,21 @@ public class UserServiceImpl implements UserService {
         UserDto userDto = mapperUtil.convert(user, new UserDto());
         userDto.setOnlyAdmin(isOnlyAdmin(userDto));
         return userDto;
+    }
+
+    @Override
+    public List<UserDto> getAllByLoggedInUser() {
+        if (keycloakService.getLoggedInUser().getRole().getDescription().equals("Admin")) {
+            return getAllUsers()
+                    .stream().filter(userDto -> userDto.getCompany()
+                            .getId().equals(keycloakService.getLoggedInUser()
+                                    .getCompany().getId())).collect(Collectors.toList());
+        } else if (keycloakService.getLoggedInUser().getRole().getDescription().equals("Root User")) {
+            return getAllUsers().stream().
+                    filter(userDto -> userDto.getRole().getDescription().equals("Admin")).collect(Collectors.toList());
+        } else {
+            throw new UserNotFoundException("No user is available");
+        }
     }
 
     @Override

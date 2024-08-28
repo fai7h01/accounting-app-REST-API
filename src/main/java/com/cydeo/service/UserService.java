@@ -17,6 +17,8 @@ public interface UserService {
 
     UserDto findById(Long id);
 
+    List<UserDto> getAllByLoggedInUser();
+
     List<UserDto> getAllUsers();
 
     void delete(Long id);
