@@ -8,6 +8,8 @@ import com.cydeo.service.EmailService;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
 import com.itextpdf.text.DocumentException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,7 @@ import java.util.List;
 @RequestMapping("/api/v1/mail")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(description = "Email Controller", name = "Email API")
 public class EmailController {
 
     private final EmailService emailService;
@@ -33,6 +36,7 @@ public class EmailController {
 
     @DefaultExceptionMessage(defaultMessage = "Something went wrong while sending email.")
     @GetMapping("/send-email/{id}")
+    @Operation(summary = "Send email with generated PDF attachment")
     public ResponseEntity<ResponseWrapper> sendEmail(@PathVariable("id") Long invoiceId){
         InvoiceDto invoice = invoiceService.findById(invoiceId);
         List<InvoiceProductDto> invoiceProducts = invoiceProductService.listAllByInvoiceId(invoiceId);

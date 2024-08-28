@@ -6,6 +6,8 @@ import com.cydeo.dto.common.response.ResponseWrapper;
 import com.cydeo.service.PaymentService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +19,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/payment")
 @RequiredArgsConstructor
+@Tag(description = "Payment Controller", name = "Payment API")
 public class PaymentController {
 
     private final PaymentService paymentService;
 
     @GetMapping("/list")
+    @Operation(summary = "List all payments for company")
     public ResponseEntity<ResponseWrapper> listAllPayments(@RequestParam(value = "year", required = false) String year){
         int chosenYear = year == null || year.isEmpty() ? LocalDate.now().getYear() : Integer.parseInt(year);
         List<PaymentDto> payments = paymentService.listAllByYear(chosenYear);
@@ -32,6 +36,7 @@ public class PaymentController {
     }
 
     @PostMapping("/chargePayment/{id}")
+    @Operation(summary = "Charge fixed subscription fee")
     public ResponseEntity<ResponseWrapper> chargeSubscriptionFee(@PathVariable Long id) throws StripeException {
         try {
             PaymentIntent paymentIntent = paymentService.createPaymentIntent(25000L, id);
