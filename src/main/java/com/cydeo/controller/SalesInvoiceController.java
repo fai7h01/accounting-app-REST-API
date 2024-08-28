@@ -7,6 +7,8 @@ import com.cydeo.dto.common.response.ResponseWrapper;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +19,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/salesInvoice")
 @RequiredArgsConstructor
+@Tag(description = "Sales Invoice Controller", name = "Sales Invoice API")
 public class SalesInvoiceController {
 
     private final InvoiceService invoiceService;
     private final InvoiceProductService invoiceProductService;
 
     @GetMapping("/list")
+    @Operation(summary = "List all sales invoices")
     public ResponseEntity<ResponseWrapper> listSalesInvoices(){
         List<InvoiceDto> invoices = invoiceService.listAllByType(InvoiceType.SALES);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
@@ -32,6 +36,7 @@ public class SalesInvoiceController {
     }
 
     @GetMapping("/print/{id}")
+    @Operation(summary = "Print sales invoice")
     public ResponseEntity<ResponseWrapper> printSalesInvoice(@PathVariable Long id){
         InvoiceDto invoiceDto = invoiceService.printInvoice(id);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
@@ -41,6 +46,7 @@ public class SalesInvoiceController {
     }
 
     @PostMapping
+    @Operation(summary = "Create sales invoice")
     public ResponseEntity<ResponseWrapper> createSalesInvoice(@RequestBody InvoiceDto invoice){
         InvoiceDto invoiceDto = invoiceService.save(invoice, InvoiceType.SALES);
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.builder()
@@ -51,6 +57,7 @@ public class SalesInvoiceController {
     }
 
     @PutMapping("/update/{id}")
+    @Operation(summary = "Update sales invoice")
     public ResponseEntity<ResponseWrapper> updateSalesInvoice(@PathVariable Long id, @RequestBody InvoiceDto invoice){
         InvoiceDto updatedInvoice = invoiceService.update(id, invoice);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
@@ -60,6 +67,7 @@ public class SalesInvoiceController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete sales invoice")
     public ResponseEntity<ResponseWrapper> deleteSalesInvoice(@PathVariable Long id){
         invoiceService.delete(id);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
@@ -68,6 +76,7 @@ public class SalesInvoiceController {
     }
 
     @PostMapping("/add/invoiceProduct/{id}")
+    @Operation(summary = "Add product to sales invoice")
     public ResponseEntity<ResponseWrapper> addInvoiceProductToSalesInvoice(@PathVariable Long id, @RequestBody InvoiceProductDto invoiceProduct){
         InvoiceDto invoice = invoiceService.findById(id);
         invoiceProduct.setInvoice(invoice);
@@ -79,6 +88,7 @@ public class SalesInvoiceController {
     }
 
     @DeleteMapping("/remove/invoiceProduct/{id}")
+    @Operation(summary = "Remove product from sales invoice")
     public ResponseEntity<ResponseWrapper> removeInvoiceProductFromSalesInvoice(@PathVariable Long id){
         invoiceProductService.delete(id);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
@@ -88,6 +98,7 @@ public class SalesInvoiceController {
 
     @ExecutionTime
     @GetMapping("/approve/{id}")
+    @Operation(summary = "Approve sales invoice")
     public ResponseEntity<ResponseWrapper> approveSalesInvoice(@PathVariable Long id){
         invoiceService.approve(id);
         invoiceProductService.lowQuantityAlert(id);

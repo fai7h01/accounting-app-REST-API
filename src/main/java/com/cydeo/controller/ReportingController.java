@@ -4,6 +4,8 @@ import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.dto.common.response.ResponseWrapper;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/reports")
 @RequiredArgsConstructor
+@Tag(description = "Reports Controller", name = "Reports API")
 public class ReportingController {
 
     private final InvoiceService invoiceService;
@@ -25,6 +28,7 @@ public class ReportingController {
 
 
     @GetMapping("/stockData")
+    @Operation(summary = "List all approved invoice products")
     public ResponseEntity<ResponseWrapper> showStockReports(){
         List<InvoiceProductDto> invoiceProducts = invoiceProductService.listAllApprovedInvoiceProducts();
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
@@ -34,6 +38,7 @@ public class ReportingController {
     }
 
     @GetMapping("/profitLossData")
+    @Operation(summary = "Show monthly profit/loss")
     public ResponseEntity<ResponseWrapper> showProfitLossReport(){
         Map<String, BigDecimal> monthlyProfitLossData = invoiceService.getMonthlyProfitLossMap();
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
