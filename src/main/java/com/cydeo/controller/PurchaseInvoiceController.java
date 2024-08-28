@@ -7,6 +7,8 @@ import com.cydeo.dto.common.response.ResponseWrapper;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +19,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/purchaseInvoice")
 @RequiredArgsConstructor
+@Tag(description = "Purchase Invoice Controller", name = "Purchase Invoice API")
 public class PurchaseInvoiceController {
 
     private final InvoiceService invoiceService;
     private final InvoiceProductService invoiceProductService;
 
     @GetMapping("/list")
+    @Operation(summary = "List all purchase invoices")
     public ResponseEntity<ResponseWrapper> listPurchaseInvoices(){
         List<InvoiceDto> invoices = invoiceService.listAllByType(InvoiceType.PURCHASE);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
@@ -32,6 +36,7 @@ public class PurchaseInvoiceController {
     }
 
     @GetMapping("/print/{id}")
+    @Operation(summary = "Print purchase invoice")
     public ResponseEntity<ResponseWrapper> printPurchaseInvoice(@PathVariable Long id){
         InvoiceDto invoiceDto = invoiceService.printInvoice(id);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
@@ -41,6 +46,7 @@ public class PurchaseInvoiceController {
     }
 
     @PostMapping
+    @Operation(summary = "Create purchase invoice")
     public ResponseEntity<ResponseWrapper> createPurchaseInvoice(@RequestBody InvoiceDto invoice){
         InvoiceDto invoiceDto = invoiceService.save(invoice, InvoiceType.PURCHASE);
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.builder()
@@ -51,6 +57,7 @@ public class PurchaseInvoiceController {
     }
 
     @PutMapping("/update/{id}")
+    @Operation(summary = "Update purchase invoice")
     public ResponseEntity<ResponseWrapper> updatePurchaseInvoice(@PathVariable Long id, @RequestBody InvoiceDto invoice){
         InvoiceDto updatedInvoice = invoiceService.update(id, invoice);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
@@ -60,6 +67,7 @@ public class PurchaseInvoiceController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete purchase invoice")
     public ResponseEntity<ResponseWrapper> deletePurchaseInvoice(@PathVariable Long id){
         invoiceService.delete(id);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
@@ -68,6 +76,7 @@ public class PurchaseInvoiceController {
     }
 
     @PostMapping("/add/invoiceProduct/{id}")
+    @Operation(summary = "Add product to purchase invoice")
     public ResponseEntity<ResponseWrapper> addInvoiceProductToPurchaseInvoice(@PathVariable Long id, @RequestBody InvoiceProductDto invoiceProduct){
         InvoiceDto invoice = invoiceService.findById(id);
         invoiceProduct.setInvoice(invoice);
@@ -79,6 +88,7 @@ public class PurchaseInvoiceController {
     }
 
     @DeleteMapping("/remove/invoiceProduct/{id}")
+    @Operation(summary = "Remove product from purchase invoice")
     public ResponseEntity<ResponseWrapper> removeInvoiceProductFromPurchaseInvoice(@PathVariable Long id){
         invoiceProductService.delete(id);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
@@ -88,6 +98,7 @@ public class PurchaseInvoiceController {
 
     @ExecutionTime
     @GetMapping("/approve/{id}")
+    @Operation(summary = "Approve purchase invoice")
     public ResponseEntity<ResponseWrapper> approvePurchaseInvoice(@PathVariable Long id){
         invoiceService.approve(id);
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value())
