@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.keycloak.KeycloakPrincipal;
+import org.keycloak.KeycloakSecurityContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -41,13 +43,26 @@ public class BaseEntity {
     private void onPrePersist(){
         this.insertDateTime = LocalDateTime.now();
         this.lastUpdateDateTime = LocalDateTime.now();
-        this.insertUserId = 1L;
-        this.lastUpdateUserId = 1L;
+        this.insertUserId = getCurrentUserId();
+        this.lastUpdateUserId = getCurrentUserId();
     }
 
     @PreUpdate
     private void onPreUpdate(){
         this.lastUpdateDateTime = LocalDateTime.now();
-        this.lastUpdateUserId = 1L;
+        this.lastUpdateUserId = getCurrentUserId();
+    }
+
+    private Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            if (authentication.getPrincipal() instanceof KeycloakPrincipal) {
+                KeycloakPrincipal<?> keycloakPrincipal = (KeycloakPrincipal<?>) authentication.getPrincipal();
+                KeycloakSecurityContext keycloakSecurityContext = keycloakPrincipal.getKeycloakSecurityContext();
+                String userId = keycloakSecurityContext.getToken().getSubject();
+                return Long.valueOf(userId); // Assuming the user ID can be converted to Long.
+            }
+        }
+        return null; // Or handle this case according application's requirements.
     }
 }
