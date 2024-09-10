@@ -1,6 +1,7 @@
 package com.cydeo.entity;
 
 import com.cydeo.service.KeycloakService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +16,7 @@ public class BaseEntityListener extends AuditingEntityListener {
 
     private final KeycloakService keycloakService;
 
-    public BaseEntityListener(KeycloakService keycloakService) {
+    public BaseEntityListener(@Lazy KeycloakService keycloakService) {
         this.keycloakService = keycloakService;
     }
 
