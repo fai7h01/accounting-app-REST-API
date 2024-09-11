@@ -20,7 +20,7 @@ public class ExceptionWrapper {
     private String message;
     private String path;
 
-    private int errorCount;
+    private Integer errorCount;
     private List<ValidationExceptionWrapper> validationExceptionList;
 
 }

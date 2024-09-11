@@ -4,6 +4,7 @@ import com.cydeo.annotation.DefaultExceptionMessage;
 import com.cydeo.dto.common.response.DefaultExceptionMessageDto;
 import com.cydeo.dto.common.response.ExceptionWrapper;
 import com.cydeo.dto.common.response.ValidationExceptionWrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -22,24 +23,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ExceptionWrapper> accessDeniedException(AccessDeniedException e, HttpServletRequest request){
-        String message = e.getMessage();
-        return new ResponseEntity<>(ExceptionWrapper.builder().success(false).code(HttpStatus.FORBIDDEN.value()).message(message).path(request.getRequestURI()).build(),HttpStatus.FORBIDDEN);
+        log.error(e.getMessage());
+        return new ResponseEntity<>(ExceptionWrapper.builder().success(false).code(HttpStatus.FORBIDDEN.value()).message("Access Denied!").path(request.getRequestURI()).build(),HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler({Throwable.class, Exception.class, RuntimeException.class, BadCredentialsException.class})
-    public ResponseEntity<ExceptionWrapper> genericException(Throwable e, HandlerMethod handlerMethod, HttpServletRequest request) {
+    public ResponseEntity<ExceptionWrapper> genericExceptionHandler(Throwable e, HandlerMethod handlerMethod, HttpServletRequest request) {
 
         Optional<DefaultExceptionMessageDto> defaultMessage = getMessageFromAnnotation(handlerMethod.getMethod());
         if (defaultMessage.isPresent() && !ObjectUtils.isEmpty(defaultMessage.get().getMessage())) {
             ExceptionWrapper response = ExceptionWrapper
                     .builder()
                     .success(false)
-                    .message(defaultMessage.get().getMessage())
+                    .message("Action failed: An error occurred!")
                     .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                     .build();
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -62,7 +64,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionWrapper> handleValidationException(MethodArgumentNotValidException exception, HttpServletRequest request){
 
-        exception.printStackTrace();
+        log.error(exception.getMessage());
 
         String message = "Invalid input(s)";
 
