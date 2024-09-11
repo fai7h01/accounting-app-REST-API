@@ -3,8 +3,6 @@ package com.cydeo.entity;
 import com.cydeo.service.KeycloakService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.PrePersist;
@@ -21,22 +19,17 @@ public class BaseEntityListener extends AuditingEntityListener {
     }
 
     @PrePersist
-    private void onPrePersist(BaseEntity baseEntity){
-
+    public void onPrePersist(BaseEntity baseEntity){
         baseEntity.setInsertDateTime(LocalDateTime.now());
         baseEntity.setLastUpdateDateTime(LocalDateTime.now());
-
         baseEntity.setInsertUserId(keycloakService.getLoggedInUser().getId());
         baseEntity.setLastUpdateUserId(keycloakService.getLoggedInUser().getId());
-
     }
 
     @PreUpdate
-    private void onPreUpdate(BaseEntity baseEntity){
-
+    public void onPreUpdate(BaseEntity baseEntity){
         baseEntity.setLastUpdateDateTime(LocalDateTime.now());
         baseEntity.setLastUpdateUserId(keycloakService.getLoggedInUser().getId());
-
     }
 
 
