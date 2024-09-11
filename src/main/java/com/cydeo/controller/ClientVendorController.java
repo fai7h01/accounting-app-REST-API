@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/clientVendor")
 @RequiredArgsConstructor
-@Tag(description = "Client/Vendor Controller", name = "Client/Vendor API")
+@Tag(name = "Client/Vendor Controller", description = "Client/Vendor API")
 public class ClientVendorController {
 
     private final ClientVendorService clientVendorService;

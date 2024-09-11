@@ -20,7 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/reports")
 @RequiredArgsConstructor
-@Tag(description = "Reports Controller", name = "Reports API")
+@Tag(name = "Reports Controller", description = "Reports API")
 public class ReportingController {
 
     private final InvoiceService invoiceService;

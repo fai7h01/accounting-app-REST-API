@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/salesInvoice")
 @RequiredArgsConstructor
-@Tag(description = "Sales Invoice Controller", name = "Sales Invoice API")
+@Tag(name = "Sales Invoice Controller", description = "Sales Invoice API")
 public class SalesInvoiceController {
 
     private final InvoiceService invoiceService;

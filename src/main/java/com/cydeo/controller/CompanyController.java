@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/company")
 @RequiredArgsConstructor
-@Tag(description = "Company Controller", name = "Company API")
+@Tag(name = "Company Controller", description = "Company API")
 public class CompanyController {
 
     private final CompanyService companyService;

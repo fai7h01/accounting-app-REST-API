@@ -27,7 +27,7 @@ import java.util.List;
 @RequestMapping("/api/v1/mail")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(description = "Email Controller", name = "Email API")
+@Tag(name = "Email Controller", description = "Email API")
 public class EmailController {
 
     private final EmailService emailService;
